@@ -126,13 +126,15 @@ export const CourseManagerModal: React.FC<Props> = ({ courses, assignments, onSa
       }
     >
       <div className="flex flex-col gap-7">
-        {!formOpen && (
+        {!editingId && (
           <div>
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
               <Label>Quick start</Label>
-              <Btn small onClick={() => startAdd()}>
-                + Custom class
-              </Btn>
+              {!formOpen && (
+                <Btn small onClick={() => startAdd()}>
+                  + Custom class
+                </Btn>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               {SUBJECT_PRESETS.map((p) => {

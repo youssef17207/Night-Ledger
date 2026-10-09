@@ -256,8 +256,7 @@ interface Interval {
 
 /**
  * First start time (minutes from midnight) inside [windowStart, windowEnd] where a block of
- * `duration` minutes fits without touching any occupied interval. Keeps a 5 minute buffer after
- * each occupied block. Returns null when nothing fits.
+ * `duration` minutes fits without touching any occupied interval. Blocks may sit back to back. Returns null when nothing fits.
  */
 export function findSlotStart(
   occupied: Interval[],
@@ -271,7 +270,7 @@ export function findSlotStart(
     if (occ.end <= cursor) continue;
     const gapEnd = Math.min(occ.start, windowEnd);
     if (gapEnd - cursor >= duration) return cursor;
-    cursor = Math.max(cursor, occ.end + 5);
+    cursor = Math.max(cursor, occ.end);
     if (cursor >= windowEnd) return null;
   }
   return windowEnd - cursor >= duration ? cursor : null;
@@ -349,68 +348,76 @@ export function generateUrgentFirstSchedule(
     // Schedule each partition chunk leading up to deadline (Urgency & Early Start)
     for (let pIdx = 0; pIdx < chunkPartitions.length; pIdx++) {
       const part = chunkPartitions[pIdx];
-      const chunkId = `chunk_${assignment.id}_part_${pIdx + 1}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
       const partDuration = part.duration;
 
       // Find the earliest suitable study window slot between now and dueDate.
       // An assignment that is already overdue is still planned, as soon as possible.
-      let placed = false;
       const overdue = dueDate.getTime() <= now.getTime();
-      const searchDate = new Date(now);
-      searchDate.setHours(0, 0, 0, 0);
+      const searchStart = new Date(now);
+      searchStart.setHours(0, 0, 0, 0);
 
-      for (let dayOffset = 0; dayOffset <= 21 && !placed; dayOffset++) {
-        const candidateDate = new Date(searchDate);
-        candidateDate.setDate(candidateDate.getDate() + dayOffset);
+      const placePiece = (duration: number, label: string): boolean => {
+        for (let dayOffset = 0; dayOffset <= 21; dayOffset++) {
+          const candidateDate = new Date(searchStart);
+          candidateDate.setDate(candidateDate.getDate() + dayOffset);
 
-        if (candidateDate > dueDate && !overdue) break; // exceeded deadline
+          if (candidateDate > dueDate && !overdue) break; // exceeded deadline
 
-        const dateKey = formatDateKey(candidateDate);
-        const dayWindows = windows
-          .filter((w) => w.dayOfWeek === candidateDate.getDay())
-          .sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+          const dateKey = formatDateKey(candidateDate);
+          const dayWindows = windows
+            .filter((w) => w.dayOfWeek === candidateDate.getDay())
+            .sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
-        for (const window of dayWindows) {
-          let windowStart = timeToMinutes(window.startTime);
-          let windowEnd = timeToMinutes(window.endTime);
+          for (const window of dayWindows) {
+            let windowStart = timeToMinutes(window.startTime);
+            let windowEnd = timeToMinutes(window.endTime);
 
-          // Never schedule in the past (10 minute buffer from now)
-          if (dateKey === formatDateKey(now)) {
-            windowStart = Math.max(windowStart, now.getHours() * 60 + now.getMinutes() + 10);
+            // Never schedule in the past (10 minute buffer from now)
+            if (dateKey === formatDateKey(now)) {
+              windowStart = Math.max(windowStart, now.getHours() * 60 + now.getMinutes() + 10);
+            }
+            // Finish before the due time on the due date
+            if (!overdue && dateKey === formatDateKey(dueDate)) {
+              windowEnd = Math.min(windowEnd, dueDate.getHours() * 60 + dueDate.getMinutes());
+            }
+            if (windowEnd - windowStart < duration) continue;
+
+            const dayOccupied = occupiedSlots.get(dateKey) || [];
+            const slotStart = findSlotStart(dayOccupied, windowStart, windowEnd, duration);
+            if (slotStart === null) continue;
+
+            const id = `chunk_${assignment.id}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+            generatedChunks.push({
+              id,
+              assignmentId: assignment.id,
+              chunkLabel: label,
+              chunkIndex: pIdx + 1,
+              totalChunks: chunkPartitions.length,
+              scheduledDate: dateKey,
+              scheduledStartTime: minutesToTime(slotStart),
+              scheduledEndTime: minutesToTime(slotStart + duration),
+              durationMinutes: duration,
+              status: 'Scheduled',
+              isManualOverride: false,
+            });
+            dayOccupied.push({ start: slotStart, end: slotStart + duration, chunkId: id });
+            occupiedSlots.set(dateKey, dayOccupied);
+            return true;
           }
-          // Finish before the due time on the due date
-          if (!overdue && dateKey === formatDateKey(dueDate)) {
-            windowEnd = Math.min(windowEnd, dueDate.getHours() * 60 + dueDate.getMinutes());
-          }
-          if (windowEnd - windowStart < partDuration) continue;
-
-          const dayOccupied = occupiedSlots.get(dateKey) || [];
-          const slotStart = findSlotStart(dayOccupied, windowStart, windowEnd, partDuration);
-          if (slotStart === null) continue;
-
-          generatedChunks.push({
-            id: chunkId,
-            assignmentId: assignment.id,
-            chunkLabel: part.label,
-            chunkIndex: pIdx + 1,
-            totalChunks: chunkPartitions.length,
-            scheduledDate: dateKey,
-            scheduledStartTime: minutesToTime(slotStart),
-            scheduledEndTime: minutesToTime(slotStart + partDuration),
-            durationMinutes: partDuration,
-            status: 'Scheduled',
-            isManualOverride: false,
-          });
-          dayOccupied.push({ start: slotStart, end: slotStart + partDuration, chunkId });
-          occupiedSlots.set(dateKey, dayOccupied);
-          placed = true;
-          break;
         }
-      }
+        return false;
+      };
 
-      if (!placed) {
-        unplacedMinutes += partDuration;
-      }
+      // If a block does not fit whole, split it in two and place the halves separately,
+      // so free time that is fragmented across windows is still used. Returns minutes left unplaced.
+      const placeOrSplit = (duration: number, label: string, depth = 0): number => {
+        if (placePiece(duration, label)) return 0;
+        if (duration < 30 || depth >= 3) return duration;
+        const first = Math.max(15, Math.floor(duration / 2 / 15) * 15);
+        return placeOrSplit(first, `${label} (a)`, depth + 1) + placeOrSplit(duration - first, `${label} (b)`, depth + 1);
+      };
+
+      unplacedMinutes += placeOrSplit(partDuration, part.label);
     }
   }
 

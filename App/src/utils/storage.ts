@@ -14,7 +14,7 @@ import {
  * learned pace: a fresh visitor starts with a blank ledger.
  *
  * When accounts arrive, swap the read/write helpers below for an API client;
- * the rest of the app only talks to the load*/save* functions.
+ * the rest of the app only talks to the load and save functions.
  */
 export const STORAGE_KEYS = {
   USER: 'nightledger_user_v1',
