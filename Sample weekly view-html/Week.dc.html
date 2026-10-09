@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Weekly ledger sample</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Bricolage+Grotesque:wght@400;500;600&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#15121A}
+a{color:#F1EBDD;text-decoration:none}a:hover{color:#AA92FF}
+.chk{appearance:none;-webkit-appearance:none;margin:0;width:22px;height:22px;flex:none;border:2px solid currentColor;border-radius:0;background:transparent;cursor:pointer}
+.chk:checked{background:var(--c)}
+.chk:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.sel{appearance:none;-webkit-appearance:none;height:44px;box-sizing:border-box;padding:0 30px 0 12px;border:2px solid currentColor;border-radius:0;background:transparent;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.sel option{color:#15121A;background:#F1EBDD}
+.sel:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+</style>
+</helmet>
+<div style="min-height: 1760px; box-sizing: border-box; background: #15121A; color: #F1EBDD; font-family: 'Bricolage Grotesque', sans-serif; padding: 28px 28px 72px">
+<div style="max-width: 1120px; margin: 0 auto">
+
+<header style="display: flex; flex-direction: column; gap: 30px; padding: 0 0 48px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #A59FB0">
+<span>Night Ledger</span>
+<span style="display: flex; gap: 22px; align-items: center">
+<a href="#" style="display: inline-block; padding: 12px 0; color: #A59FB0">← Prev</a>
+<span style="color: #F1EBDD">Oct 5 – Oct 9</span>
+<a href="#" style="display: inline-block; padding: 12px 0; color: #A59FB0">Next →</a>
+</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 40px 56px; align-items: flex-start">
+<div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 30px">
+<div>
+<h1 style="margin: 0; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 96px; line-height: 0.9; letter-spacing: -0.03em">Week <span style="font-style: italic">41</span></h1>
+</div>
+
+<p style="margin: 0; font-family: 'Instrument Serif', serif; font-style: italic; font-size: 32px; line-height: 1.3">Next up: <span style="padding: 0 10px; background: {{next.color}}; color: {{next.ink}}; font-style: normal; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em">{{next.title}}</span> <span style="font-family: 'DM Mono', monospace; font-style: normal; font-size: 16px; color: #A59FB0; letter-spacing: 0.04em">{{next.when}}</span></p>
+
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 760px">
+<span style="font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A59FB0">Open work per class · {{progressLabel}}</span>
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 14px; min-height: 32px">
+<span style="flex: none; width: 92px"><span style="display: inline-block; padding: 3px 9px; background: {{b.color}}; color: {{b.ink}}; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase">{{b.name}}</span></span>
+<div aria-hidden="true" style="flex: 1 1 0; min-width: 0; height: 22px; display: flex; align-items: center">
+<sc-if value="{{b.clear}}" hint-placeholder-val="{{false}}">
+<span style="flex: 1 1 0; border-bottom: 2px dotted #3A3445"></span>
+</sc-if>
+<sc-if value="{{b.hasOpen}}" hint-placeholder-val="{{true}}">
+<div style="width: {{b.width}}; min-width: 14px; height: 22px; display: flex; gap: 3px">
+<sc-for list="{{b.segs}}" as="s" hint-placeholder-count="2">
+<span style="flex: {{s.flex}} 1 0; min-width: 0; box-sizing: border-box; background: {{s.bg}}; border: 2px solid {{b.color}}"></span>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<span style="flex: none; width: 64px; text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; color: #A59FB0">{{b.countLabel}}</span>
+</div>
+</sc-for>
+<span style="font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: #A59FB0">Filled = in progress · Outlined = to do · Done drops off the chart</span>
+</div>
+</div>
+
+<aside style="flex: 0 1 360px; min-width: 260px; display: flex; flex-direction: column; gap: 26px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+<div style="display: flex; align-items: baseline; gap: 12px">
+<span style="font-family: 'Instrument Serif', serif; font-style: italic; font-size: 72px; line-height: 0.9">{{dueToday}}</span>
+<span style="font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #A59FB0">due today</span>
+</div>
+<button aria-label="Add assignment" style="flex: none; width: 64px; height: 64px; border-radius: 999px; border: none; background: #F1EBDD; color: #15121A; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M12 4v16M4 12h16"></path></svg></button>
+</div>
+<div style="display: flex; flex-direction: column">
+<span style="padding-bottom: 12px; font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A59FB0">After that</span>
+<sc-for list="{{upcoming}}" as="u" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-top: 1px solid #3A3445">
+<span style="flex: none; width: 10px; height: 10px; background: {{u.color}}"></span>
+<span style="flex: 1 1 0; min-width: 0; font-size: 15px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase">{{u.title}}</span>
+<span style="flex: none; font-family: 'DM Mono', monospace; font-size: 13px; color: #A59FB0">{{u.when}}</span>
+</div>
+</sc-for>
+</div>
+</aside>
+</div>
+</header>
+
+<sc-for list="{{days}}" as="d" hint-placeholder-count="5">
+<section style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px 40px; box-sizing: border-box; padding: {{d.pad}}; margin: {{d.margin}}; background: {{d.bg}}; color: {{d.ink}}; border-top: {{d.rule}}; box-shadow: {{d.shadow}}">
+<div style="flex: 0 0 150px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: {{d.muted}}">{{d.label}}</span>
+<span style="font-family: 'Instrument Serif', serif; font-size: 92px; line-height: 0.9; letter-spacing: -0.03em">{{d.date}}</span>
+</div>
+<div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 4px">
+<sc-for list="{{d.tasks}}" as="t" hint-placeholder-count="2">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 52px; opacity: {{t.opacity}}">
+<label style="flex: none; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<input class="chk" type="checkbox" aria-label="Mark {{t.title}} done" checked="{{t.done}}" onChange="{{t.onCheck}}" style="--c: {{t.color}}">
+</label>
+<span style="flex: none; width: 92px"><span style="display: inline-block; padding: 3px 9px; background: {{t.color}}; color: {{t.ink}}; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase">{{t.subject}}</span></span>
+<span style="min-width: 0; padding: 7px 12px; background: {{d.boxBg}}; color: {{d.boxInk}}; box-shadow: 3px 3px 0 {{t.color}}; font-size: 16px; font-weight: 600; letter-spacing: 0.05em; line-height: 1.25; text-transform: uppercase; text-decoration: {{t.deco}}">{{t.title}}</span>
+<span aria-hidden="true" style="flex: 1 1 24px; min-width: 12px; height: 1px; border-bottom: 2px dotted currentColor; opacity: 0.3; margin-top: 10px"></span>
+<span style="flex: none; font-family: 'DM Mono', monospace; font-size: 14px; color: {{d.muted}}">{{t.time}}</span>
+<span style="position: relative; flex: none; display: flex">
+<select class="sel" aria-label="Status of {{t.title}}" value="{{t.status}}" onChange="{{t.onStatus}}" style="width: 142px; background: {{t.selBg}}; color: {{t.selInk}}">
+<option value="todo">To do</option>
+<option value="progress">In progress</option>
+<option value="done">Done</option>
+</select>
+<span aria-hidden="true" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 11px; color: {{t.selInk}}">▾</span>
+</span>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+<div style="border-top: 1px solid #3A3445"></div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1760}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { status: {} };
+}
+setStatus(id, value) {
+var m = Object.assign({}, this.state.status);
+m[id] = value;
+this.setState({ status: m });
+}
+renderVals() {
+var self = this;
+var INK = '#15121A';
+var S = {
+Math: '#AA92FF',
+English: '#FF8AB0',
+Science: '#A9E67E',
+History: '#5ED9CB',
+Art: '#FF9650'
+};
+var tilts = [-1.5, 1, -1, 1.5];
+var n = 0;
+function t(subject, title, time, base) {
+n += 1;
+var id = 'a' + n;
+var status = self.state.status[id] || base;
+var done = status === 'done';
+return {
+id: id, subject: subject, title: title, time: time, status: status, done: done,
+color: S[subject], ink: INK, tilt: tilts[n % 4],
+opacity: done ? 0.5 : 1,
+deco: done ? 'line-through' : 'none',
+selBg: status === 'progress' ? S[subject] : 'transparent',
+selInk: status === 'progress' ? INK : 'inherit',
+onCheck: function (e) { self.setStatus(id, e.target.checked ? 'done' : 'todo'); },
+onStatus: function (e) { self.setStatus(id, e.target.value); }
+};
+}
+var raw = [
+{ name: 'Mon', date: '5', tasks: [t('Math', 'Problem set 4.2', '9:00', 'done'), t('English', 'Read chapters 5–6', '23:59', 'done')] },
+{ name: 'Tue', date: '6', tasks: [t('Science', 'Lab report: titration', '13:00', 'done'), t('History', 'Primary source notes', '23:59', 'done')] },
+{ name: 'Wed', date: '7', tasks: [t('Science', 'Unit 3 flashcards', '12:00', 'done'), t('Math', 'Chapter 5 notes', '20:00', 'progress')] },
+{ name: 'Thu', date: '8', today: true, tasks: [t('Math', 'Quiz review sheet', '10:00', 'done'), t('Art', 'Sketchbook, 3 pages', '15:00', 'done'), t('Math', 'Practice test', '21:00', 'progress'), t('English', 'Thesis draft', '23:59', 'progress')] },
+{ name: 'Fri', date: '9', tasks: [t('Math', 'Quiz: derivatives', '9:00', 'todo'), t('Math', 'Problem set 5.3', '12:00', 'todo'), t('Math', 'Formula sheet', '23:59', 'todo'), t('History', 'Essay outline', '23:59', 'todo')] }
+];
+var days = raw.map(function (d) {
+var today = !!d.today;
+return {
+name: d.name, date: d.date, tasks: d.tasks,
+label: today ? d.name + ' · Today' : d.name,
+bg: today ? '#F1EBDD' : 'transparent',
+ink: today ? INK : '#F1EBDD',
+muted: today ? '#5B5568' : '#A59FB0',
+boxBg: today ? INK : '#F1EBDD',
+boxInk: today ? '#F1EBDD' : INK,
+pad: today ? '28px 20px' : '28px 0',
+margin: today ? '0 -20px' : '0',
+rule: today ? 'none' : '1px solid #3A3445',
+shadow: today ? '8px 8px 0 #AA92FF' : 'none'
+};
+});
+var all = [];
+raw.forEach(function (d) { d.tasks.forEach(function (x) { all.push({ task: x, day: d.name }); }); });
+var doneCount = all.filter(function (a) { return a.task.done; }).length;
+var nextItem = all.filter(function (a) { return !a.task.done; })[0];
+var next = nextItem
+? { title: nextItem.task.title, color: nextItem.task.color, ink: INK, when: nextItem.day + ' ' + nextItem.task.time }
+: { title: 'Nothing, all clear', color: '#F1EBDD', ink: INK, when: '' };
+
+var todayDay = raw.filter(function (d) { return d.today; })[0];
+var dueToday = todayDay ? todayDay.tasks.filter(function (x) { return !x.done; }).length : 0;
+var upcoming = all.filter(function (a) { return !a.task.done; }).slice(1, 6).map(function (a) {
+return { color: a.task.color, title: a.task.title, when: a.day + ' ' + a.task.time };
+});
+
+// Open (not done) assignments per class. Done ones are excluded.
+var bars = Object.keys(S).map(function (k, i) {
+var mine = all.filter(function (a) { return a.task.subject === k; });
+var open = mine.filter(function (a) { return !a.task.done; });
+var inProg = open.filter(function (a) { return a.task.status === 'progress'; }).length;
+var todo = open.length - inProg;
+// A few open items get one block each. A big pile collapses to two blocks
+// (in progress / to do) so the bar stays readable at any count.
+var segs = open.length <= 14
+? open.map(function (a) { return { flex: 1, bg: a.task.status === 'progress' ? S[k] : 'transparent' }; })
+: [{ flex: inProg, bg: S[k] }, { flex: todo, bg: 'transparent' }].filter(function (s) { return s.flex > 0; });
+return {
+name: k, color: S[k], ink: INK, tilt: tilts[i % 4],
+total: mine.length, open: open.length, segs: segs,
+hasOpen: open.length > 0, clear: open.length === 0,
+countLabel: open.length > 0 ? open.length + ' left' : 'clear'
+};
+}).filter(function (b) { return b.total > 0; });
+// Bars are a fraction of the track, never wider than it. The scale is at
+// least 6 so a class with 1–2 open items doesn't look full, and it grows
+// to the largest class so the longest bar always fits.
+var maxOpen = Math.max.apply(null, bars.map(function (b) { return b.open; }));
+var scale = Math.max(6, maxOpen);
+bars.forEach(function (b) { b.width = (b.open / scale * 100) + '%'; });
+
+return {
+days: days, next: next, bars: bars, dueToday: dueToday, upcoming: upcoming,
+progressLabel: doneCount + ' of ' + all.length + ' done'
+};
+}
+}
+</script>
+</body>
+</html>

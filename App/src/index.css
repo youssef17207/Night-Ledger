@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+/* Night Ledger — tokens lifted from "Palette & type" */
+@theme {
+  --color-ink: #15121a;
+  --color-paper: #f1ebdd;
+  --color-dust: #a59fb0;
+  --color-rule: #3a3445;
+  --color-ledger: #1d1924;
+  --color-today-muted: #5b5568;
+
+  --color-lilac: #aa92ff;
+  --color-rose: #ff8ab0;
+  --color-pistachio: #a9e67e;
+  --color-aqua: #5ed9cb;
+  --color-tangerine: #ff9650;
+
+  --font-serif: 'Instrument Serif', serif;
+  --font-sans: 'Bricolage Grotesque', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: #15121a;
+  color: #f1ebdd;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #aa92ff;
+  color: #15121a;
+}
+
+a {
+  color: #f1ebdd;
+  text-decoration: none;
+}
+a:hover {
+  color: #aa92ff;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Checkbox: hard square, fills with the class colour */
+.chk {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border: 2px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.chk:checked {
+  background: var(--c);
+}
+.chk:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Status / generic select */
+.sel {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 30px 0 12px;
+  border: 2px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.sel option {
+  color: #15121a;
+  background: #f1ebdd;
+}
+.sel:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Text fields on the dark ledger surface */
+.fld {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 2px solid #3a3445;
+  border-radius: 0;
+  background: #15121a;
+  color: #f1ebdd;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+.fld::placeholder {
+  color: #6f687b;
+}
+.fld:hover {
+  border-color: #a59fb0;
+}
+.fld:focus {
+  outline: none;
+  border-color: #f1ebdd;
+}
+.fld.mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+}
+textarea.fld {
+  resize: vertical;
+}
+
+input[type='range'] {
+  accent-color: #f1ebdd;
+  width: 100%;
+  height: 28px;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #aa92ff;
+  outline-offset: 3px;
+}
+
+/* Hide scrollbars on horizontal chip rows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Thin dark scrollbars inside modals */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #3a3445 transparent;
+}
+
+@keyframes ledger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ledger-in {
+  animation: ledger-in 160ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledger-in {
+    animation: none;
+  }
+}
