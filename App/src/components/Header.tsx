@@ -197,6 +197,28 @@ export const Footer: React.FC<FooterProps> = ({
       <span className="font-mono text-[12px] tracking-[0.04em]" style={{ color: DUST }}>
         Saved privately in this browser. No account needed yet.
       </span>
+      <div
+        className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-2 font-mono text-[12px] tracking-[0.04em]"
+        style={{ color: DUST }}
+      >
+        <span>Developed and created by Youssef Saleh</span>
+        <a
+          href="https://www.linkedin.com/in/youssef-saleh-082708403/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="uppercase tracking-[0.08em] transition-colors hover:text-[#AA92FF]"
+        >
+          LinkedIn
+        </a>
+        <a
+          href="https://github.com/youssef17207"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="uppercase tracking-[0.08em] transition-colors hover:text-[#AA92FF]"
+        >
+          GitHub
+        </a>
+      </div>
     </footer>
   );
 };
