@@ -17,6 +17,7 @@ interface Props {
   onOpenHours: () => void;
   onAutoFix: () => void;
   onOpenHelp: () => void;
+  onOpenFeatures: () => void;
 }
 
 const mono = 'font-mono text-[13px] uppercase';
@@ -37,6 +38,23 @@ const ToolLink: React.FC<{ onClick: () => void; children: React.ReactNode; title
   </button>
 );
 
+/** Wordmark: a crescent-over-ledger-lines mark beside "Night Ledger" set in the display serif. */
+const Logo: React.FC = () => (
+  <span className="mr-2 flex items-center gap-3 normal-case" style={{ color: PAPER, letterSpacing: 'normal' }} aria-label="Night Ledger">
+    <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" className="flex-none">
+      <rect width="38" height="38" fill={PAPER} />
+      <circle cx="17" cy="16" r="10" fill="#15121A" />
+      <circle cx="22" cy="13" r="9" fill={PAPER} />
+      <rect x="6" y="28" width="26" height="2" fill="#15121A" />
+      <rect x="6" y="32" width="16" height="2" fill="#15121A" />
+      <circle cx="29" cy="9" r="2.2" fill="#7E5BFF" />
+    </svg>
+    <span className="font-serif text-[30px] leading-none tracking-[0.005em]">
+      <span className="italic">Night</span> Ledger
+    </span>
+  </span>
+);
+
 export const Header: React.FC<Props> = ({
   tab,
   onTab,
@@ -51,6 +69,7 @@ export const Header: React.FC<Props> = ({
   onOpenHours,
   onAutoFix,
   onOpenHelp,
+  onOpenFeatures,
 }) => {
   const tabs: Array<{ id: DashboardTab; label: string }> = [
     { id: 'week', label: 'Week' },
@@ -65,7 +84,7 @@ export const Header: React.FC<Props> = ({
         style={{ letterSpacing: '0.14em', color: DUST }}
       >
         <span className="flex flex-wrap items-center gap-x-8">
-          <span style={{ color: PAPER }}>Night Ledger</span>
+          <Logo />
           <nav aria-label="Views" className="flex items-center gap-6">
             {tabs.map((t) => {
               const active = tab === t.id;
@@ -130,6 +149,9 @@ export const Header: React.FC<Props> = ({
         <ToolLink onClick={onAutoFix} title="Move missed study blocks into the next open slots">
           Auto-fix
         </ToolLink>
+        <ToolLink onClick={onOpenFeatures} title="See everything Night Ledger can do">
+          Features
+        </ToolLink>
         <ToolLink onClick={onOpenHelp}>How it works</ToolLink>
       </div>
     </div>
@@ -156,6 +178,17 @@ export const Footer: React.FC<FooterProps> = ({
   onReset,
 }) => {
   const fileRef = React.useRef<HTMLInputElement>(null);
+  const [inverted, setInverted] = React.useState(() => document.documentElement.hasAttribute('data-inverted'));
+  const toggleInverted = () => {
+    const next = !inverted;
+    document.documentElement.toggleAttribute('data-inverted', next);
+    try {
+      localStorage.setItem('night-ledger-inverted', next ? '1' : '0');
+    } catch {
+      /* storage blocked: the choice just won't persist */
+    }
+    setInverted(next);
+  };
   const link =
     'cursor-pointer border-none bg-transparent py-2 font-mono text-[12px] uppercase tracking-[0.08em] transition-colors hover:text-[#AA92FF]';
   return (
@@ -172,6 +205,16 @@ export const Footer: React.FC<FooterProps> = ({
           title="Automatically move study blocks you miss into the next open slot"
         >
           Auto-rebalance · {autoRebalance ? 'On' : 'Off'}
+        </button>
+        <button
+          type="button"
+          className={link}
+          style={{ color: DUST }}
+          onClick={toggleInverted}
+          aria-pressed={inverted}
+          title="Flip to a light background if dark themes are hard to read"
+        >
+          Invert colors · {inverted ? 'On' : 'Off'}
         </button>
         <button type="button" className={link} style={{ color: DUST }} onClick={onExport}>
           Export backup

@@ -50,6 +50,8 @@ import {
   fromUiStatus,
   isChunkSlipped,
   courseColorOf,
+  fmtHHMM,
+  DAY_LONG,
   toLocalInput,
 } from './utils/ledger';
 
@@ -65,6 +67,7 @@ import { HardCapAlertModal } from './components/HardCapAlertModal';
 import { FocusTimerModal } from './components/FocusTimerModal';
 import { AssignmentDetailModal } from './components/AssignmentDetailModal';
 import { HelpModal } from './components/HelpModal';
+import { FeaturesModal } from './components/FeaturesModal';
 import { Btn, Modal } from './components/ui';
 
 const CONFETTI_COLORS = ['#AA92FF', '#FF8AB0', '#A9E67E', '#5ED9CB', '#FF9650', '#F1EBDD'];
@@ -86,6 +89,7 @@ export default function App() {
   const [coursesOpen, setCoursesOpen] = useState(false);
   const [hoursOpen, setHoursOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [featuresOpen, setFeaturesOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const [hardCap, setHardCap] = useState<HardCapCheckResult | null>(null);
   const [focusChunkId, setFocusChunkId] = useState<string | null>(null);
@@ -429,7 +433,7 @@ export default function App() {
         label: `${dayName} extended session`,
       };
       handleSaveWindows([...live.current.windows, extra]);
-      showToast(`Added a 19:00–22:30 window on ${dayName}s.`);
+      showToast(`Added a ${fmtHHMM(extra.startTime)}–${fmtHHMM(extra.endTime)} window on ${DAY_LONG[action.targetDayOfWeek]}s.`);
     } else if (action.type === 'reduce_duration' && draft && action.suggestedMinutes) {
       setAddDraft({ ...draft, durationMinutes: action.suggestedMinutes });
     } else if (action.type === 'split_further' && draft) {
@@ -539,6 +543,7 @@ export default function App() {
             onOpenHours={() => setHoursOpen(true)}
             onAutoFix={handleAutoFix}
             onOpenHelp={() => setHelpOpen(true)}
+            onOpenFeatures={() => setFeaturesOpen(true)}
           />
 
           {tab === 'week' && (
@@ -651,6 +656,16 @@ export default function App() {
           onClose={() => {
             setHardCap(null);
             setAddOpen(true);
+          }}
+        />
+      )}
+
+      {featuresOpen && (
+        <FeaturesModal
+          onClose={() => setFeaturesOpen(false)}
+          onOpenHelp={() => {
+            setFeaturesOpen(false);
+            setHelpOpen(true);
           }}
         />
       )}

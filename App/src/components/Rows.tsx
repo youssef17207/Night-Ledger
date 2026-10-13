@@ -213,7 +213,7 @@ export const BlockRow: React.FC<BlockRowProps> = ({
           {chunk.status === 'Missed' ? 'Missed' : 'Slipped'}
         </span>
       )}
-      <span className="flex-none font-mono text-[14px]" style={{ color: tone.muted }}>
+      <span className="flex-none whitespace-nowrap font-mono text-[14px]" style={{ color: tone.muted }}>
         {fmtHHMM(chunk.scheduledStartTime)}–{fmtHHMM(chunk.scheduledEndTime)}
       </span>
       {!done && (

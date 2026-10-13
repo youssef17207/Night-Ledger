@@ -51,15 +51,20 @@ export function isoWeek(d: Date): number {
   return Math.ceil(((t.getTime() - yearStart.getTime()) / MS_DAY + 1) / 7);
 }
 
-/** 24h clock without a leading zero on the hour, as in the mockup: 9:00, 23:59. */
-export function fmtClock(d: Date): string {
-  return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
+/** 12-hour clock: 9:00 AM, 11:59 PM. */
+function fmt12(h: number, m: number): string {
+  const suffix = h >= 12 ? 'PM' : 'AM';
+  return `${h % 12 || 12}:${m.toString().padStart(2, '0')} ${suffix}`;
 }
 
-/** "HH:MM" string -> "9:00" */
+export function fmtClock(d: Date): string {
+  return fmt12(d.getHours(), d.getMinutes());
+}
+
+/** "HH:MM" (24h) string -> "9:00 AM" */
 export function fmtHHMM(t: string): string {
   const [h, m] = t.split(':').map(Number);
-  return `${h}:${(m || 0).toString().padStart(2, '0')}`;
+  return fmt12(h, m || 0);
 }
 
 export function fmtMonthDay(d: Date): string {

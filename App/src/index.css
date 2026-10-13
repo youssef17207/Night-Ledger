@@ -24,6 +24,48 @@ html {
   color-scheme: dark;
 }
 
+/* Light mode: invert the whole page; hue-rotate keeps the accent colours' hue. */
+html[data-inverted] {
+  filter: invert(1) hue-rotate(180deg);
+  color-scheme: light;
+}
+
+/* Inverted mode: re-invert class-coloured chips, bars and checkboxes so they keep their full
+   bright colour (and dark text) instead of turning muddy. Only background / full-border / --c
+   usages are matched, so coloured text and row containers are left alone. */
+html[data-inverted] :is(
+  [style*="background: rgb(170, 146, 255)"],
+  [style*="border: 2px solid rgb(170, 146, 255)"],
+  [style*="--c: #AA92FF" i],
+  [style*="background: rgb(255, 138, 176)"],
+  [style*="border: 2px solid rgb(255, 138, 176)"],
+  [style*="--c: #FF8AB0" i],
+  [style*="background: rgb(169, 230, 126)"],
+  [style*="border: 2px solid rgb(169, 230, 126)"],
+  [style*="--c: #A9E67E" i],
+  [style*="background: rgb(94, 217, 203)"],
+  [style*="border: 2px solid rgb(94, 217, 203)"],
+  [style*="--c: #5ED9CB" i],
+  [style*="background: rgb(255, 150, 80)"],
+  [style*="border: 2px solid rgb(255, 150, 80)"],
+  [style*="--c: #FF9650" i],
+  [style*="background: rgb(244, 222, 123)"],
+  [style*="border: 2px solid rgb(244, 222, 123)"],
+  [style*="--c: #F4DE7B" i],
+  [style*="background: rgb(130, 199, 255)"],
+  [style*="border: 2px solid rgb(130, 199, 255)"],
+  [style*="--c: #82C7FF" i],
+  [style*="background: rgb(228, 155, 255)"],
+  [style*="border: 2px solid rgb(228, 155, 255)"],
+  [style*="--c: #E49BFF" i],
+  [style*="background: rgb(255, 122, 122)"],
+  [style*="border: 2px solid rgb(255, 122, 122)"],
+  [style*="--c: #FF7A7A" i]
+) {
+  /* exact inverse of the root filter (rotate after invert), so the original colour comes back */
+  filter: hue-rotate(-180deg) invert(1);
+}
+
 body {
   margin: 0;
   background: #15121a;
@@ -140,6 +182,31 @@ a:focus-visible,
 summary:focus-visible {
   outline: 2px solid #aa92ff;
   outline-offset: 3px;
+}
+
+/* Smooth hover highlight on every button */
+button {
+  transition: filter 160ms ease, background-color 160ms ease, color 160ms ease,
+    opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+button:not(:disabled):hover {
+  filter: brightness(1.2);
+}
+/* Filled or outlined buttons flip light <-> dark; hue-rotate keeps the colours' hue */
+button[data-boxed]:not(:disabled):hover {
+  filter: invert(1) hue-rotate(180deg);
+}
+button[data-text]:not(:disabled):hover {
+  box-shadow: 0 0 0 6px var(--hv-bg);
+}
+button[data-text]:not(:disabled):hover,
+button[data-outlined]:not(:disabled):hover {
+  background-color: var(--hv-bg) !important;
+  color: var(--hv-fg) !important;
+  filter: none;
+}
+button[data-boxed]:not(:disabled):active {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 
 /* Hide scrollbars on horizontal chip rows */

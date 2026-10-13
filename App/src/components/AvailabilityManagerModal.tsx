@@ -65,6 +65,13 @@ export const AvailabilityManagerModal: React.FC<Props> = ({ windows: initialWind
   const minutesOf = (w: AvailabilityWindow) => Math.max(0, timeToMinutes(w.endTime) - timeToMinutes(w.startTime));
   const totalWeekly = windows.reduce((s, w) => s + minutesOf(w), 0);
 
+  // A routine chip stays lit while the windows still match it exactly; Cancel undoes any swap.
+  const sig = (ws: AvailabilityWindow[]) =>
+    ws.map((w) => `${w.dayOfWeek}|${w.startTime}|${w.endTime}|${w.label}`).sort().join(';');
+  const activePreset = (Object.keys(PRESETS) as Array<keyof typeof PRESETS>).find(
+    (k) => sig(PRESETS[k].build()) === sig(windows),
+  );
+
   const pickDay = (d: number) => {
     setSelectedDay(d);
     setTargetDays(new Set([d]));
@@ -136,14 +143,7 @@ export const AvailabilityManagerModal: React.FC<Props> = ({ windows: initialWind
           <div className="flex flex-wrap items-center gap-2">
             <Label>Quick routine</Label>
             {(Object.keys(PRESETS) as Array<keyof typeof PRESETS>).map((k) => (
-              <Chip
-                key={k}
-                onClick={() => {
-                  if (windows.length === 0 || window.confirm('Replace your current free hours with this routine?')) {
-                    setWindows(PRESETS[k].build());
-                  }
-                }}
-              >
+              <Chip key={k} active={activePreset === k} onClick={() => setWindows(PRESETS[k].build())}>
                 {PRESETS[k].name}
               </Chip>
             ))}
@@ -194,7 +194,7 @@ export const AvailabilityManagerModal: React.FC<Props> = ({ windows: initialWind
             <div className="flex flex-col">
               {dayWindows.map((w) => (
                 <div key={w.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3" style={{ borderTop: `1px solid ${RULE}` }}>
-                  <span className="w-[120px] flex-none font-mono text-[14px]">
+                  <span className="w-[190px] flex-none whitespace-nowrap font-mono text-[14px]">
                     {fmtHHMM(w.startTime)}–{fmtHHMM(w.endTime)}
                   </span>
                   <span className="min-w-0 flex-[1_1_160px] text-[15px] font-medium uppercase" style={{ letterSpacing: '0.04em' }}>
