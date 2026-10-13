@@ -199,10 +199,15 @@ button[data-boxed]:not(:disabled):hover {
 button[data-text]:not(:disabled):hover {
   box-shadow: 0 0 0 6px var(--hv-bg);
 }
-/* Week / Today / Homework tabs: a little wider than the text. !important beats the inline
-   underline shadow the active tab carries. */
+/* Week / Today / Homework tabs: the button carries its own side padding (px-2) for width, and the
+   fill is a gradient shortened top and bottom so there is little air around the text. The active
+   tab's underline shadow is left alone. */
 nav[aria-label='Views'] button[data-text]:not(:disabled):hover {
-  box-shadow: -8px 0 0 0 var(--hv-bg), 8px 0 0 0 var(--hv-bg) !important;
+  background-color: transparent !important;
+  background-image: linear-gradient(var(--hv-bg), var(--hv-bg));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% calc(100% - 14px);
 }
 button[data-text]:not(:disabled):hover,
 button[data-outlined]:not(:disabled):hover {

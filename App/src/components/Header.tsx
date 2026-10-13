@@ -94,7 +94,7 @@ export const Header: React.FC<Props> = ({
                   type="button"
                   onClick={() => onTab(t.id)}
                   aria-current={active ? 'page' : undefined}
-                  className={`${mono} cursor-pointer border-none bg-transparent py-3 tracking-[0.14em] transition-colors hover:text-[#F1EBDD]`}
+                  className={`${mono} -mx-2 cursor-pointer border-none bg-transparent px-2 py-3 tracking-[0.14em] transition-colors hover:text-[#F1EBDD]`}
                   style={{
                     color: active ? PAPER : DUST,
                     boxShadow: active ? `inset 0 -2px 0 ${LILAC}` : 'none',
