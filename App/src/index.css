@@ -199,15 +199,20 @@ button[data-boxed]:not(:disabled):hover {
 button[data-text]:not(:disabled):hover {
   box-shadow: 0 0 0 6px var(--hv-bg);
 }
-/* Week / Today / Homework tabs: the button carries its own side padding (px-1.5) for width, and the
+/* Week / Today / Homework tabs and the Classes / Free hours row: the button carries its own side padding (px-1.5) for width, and the
    fill is a gradient shortened top and bottom so there is little air around the text. The active
    tab's underline shadow is left alone. */
-nav[aria-label='Views'] button[data-text]:not(:disabled):hover {
+nav[aria-label='Views'] button[data-text]:not(:disabled):hover,
+.tool-row button[data-text]:not(:disabled):hover {
   background-color: transparent !important;
   background-image: linear-gradient(var(--hv-bg), var(--hv-bg));
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% calc(100% - 16px);
+}
+/* The classes / free hours row has less vertical padding, so it trims less */
+.tool-row button[data-text]:not(:disabled):hover {
+  background-size: 100% calc(100% - 12px);
 }
 button[data-text]:not(:disabled):hover,
 button[data-outlined]:not(:disabled):hover {
