@@ -199,9 +199,10 @@ button[data-boxed]:not(:disabled):hover {
 button[data-text]:not(:disabled):hover {
   box-shadow: 0 0 0 6px var(--hv-bg);
 }
-/* Week / Today / Homework tabs get a roomier box */
+/* Week / Today / Homework tabs: a little wider than the text. !important beats the inline
+   underline shadow the active tab carries. */
 nav[aria-label='Views'] button[data-text]:not(:disabled):hover {
-  box-shadow: 0 0 0 11px var(--hv-bg);
+  box-shadow: -8px 0 0 0 var(--hv-bg), 8px 0 0 0 var(--hv-bg) !important;
 }
 button[data-text]:not(:disabled):hover,
 button[data-outlined]:not(:disabled):hover {
