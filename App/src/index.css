@@ -199,6 +199,10 @@ button[data-boxed]:not(:disabled):hover {
 button[data-text]:not(:disabled):hover {
   box-shadow: 0 0 0 6px var(--hv-bg);
 }
+/* Week / Today / Homework tabs get a roomier box */
+nav[aria-label='Views'] button[data-text]:not(:disabled):hover {
+  box-shadow: 0 0 0 11px var(--hv-bg);
+}
 button[data-text]:not(:disabled):hover,
 button[data-outlined]:not(:disabled):hover {
   background-color: var(--hv-bg) !important;
