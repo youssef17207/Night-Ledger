@@ -108,11 +108,11 @@ export const Header: React.FC<Props> = ({
         </span>
 
         {tab === 'week' && (
-          <span className="flex items-center gap-[22px]">
+          <span className="week-row flex items-center gap-8">
             <button
               type="button"
               onClick={onPrevWeek}
-              className={`${mono} cursor-pointer border-none bg-transparent py-3 tracking-[0.14em] transition-colors hover:text-[#AA92FF]`}
+              className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[#AA92FF]"
               style={{ color: DUST }}
             >
               ← Prev
@@ -122,7 +122,7 @@ export const Header: React.FC<Props> = ({
               onClick={onThisWeek}
               disabled={isCurrentWeek}
               title={isCurrentWeek ? 'This week' : 'Jump to this week'}
-              className={`${mono} border-none bg-transparent py-3 tracking-[0.14em] ${isCurrentWeek ? 'cursor-default' : 'cursor-pointer hover:text-[#AA92FF]'}`}
+              className={`-mx-1.5 border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] ${isCurrentWeek ? 'cursor-default' : 'cursor-pointer hover:text-[#AA92FF]'}`}
               style={{ color: PAPER }}
             >
               {weekRange}
@@ -130,7 +130,7 @@ export const Header: React.FC<Props> = ({
             <button
               type="button"
               onClick={onNextWeek}
-              className={`${mono} cursor-pointer border-none bg-transparent py-3 tracking-[0.14em] transition-colors hover:text-[#AA92FF]`}
+              className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[#AA92FF]"
               style={{ color: DUST }}
             >
               Next →

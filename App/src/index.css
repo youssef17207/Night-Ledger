@@ -199,10 +199,11 @@ button[data-boxed]:not(:disabled):hover {
 button[data-text]:not(:disabled):hover {
   box-shadow: 0 0 0 6px var(--hv-bg);
 }
-/* Week / Today / Homework tabs and the Classes / Free hours row: the button carries its own side padding (px-1.5) for width, and the
+/* Week / Today / Homework tabs, the Prev / Next row and the Classes / Free hours row: the button carries its own side padding (px-1.5) for width, and the
    fill is a gradient shortened top and bottom so there is little air around the text. The active
    tab's underline shadow is left alone. */
 nav[aria-label='Views'] button[data-text]:not(:disabled):hover,
+.week-row button[data-text]:not(:disabled):hover,
 .tool-row button[data-text]:not(:disabled):hover {
   background-color: transparent !important;
   background-image: linear-gradient(var(--hv-bg), var(--hv-bg));
@@ -210,9 +211,14 @@ nav[aria-label='Views'] button[data-text]:not(:disabled):hover,
   background-position: center;
   background-size: 100% calc(100% - 16px);
 }
-/* The classes / free hours row has less vertical padding, so it trims less */
+/* Those rows have no inline shadow, so drop the generic halo; the gradient is the box */
+.week-row button[data-text]:not(:disabled):hover,
 .tool-row button[data-text]:not(:disabled):hover {
-  background-size: 100% calc(100% - 12px);
+  box-shadow: none;
+}
+/* The classes / free hours row has less vertical padding, so it trims less (same box height) */
+.tool-row button[data-text]:not(:disabled):hover {
+  background-size: 100% calc(100% - 8px);
 }
 button[data-text]:not(:disabled):hover,
 button[data-outlined]:not(:disabled):hover {
