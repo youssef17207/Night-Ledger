@@ -122,7 +122,7 @@ export const Header: React.FC<Props> = ({
               onClick={onThisWeek}
               disabled={isCurrentWeek}
               title={isCurrentWeek ? 'This week' : 'Jump to this week'}
-              className={`-mx-1.5 border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] ${isCurrentWeek ? 'cursor-default' : 'cursor-pointer hover:text-[#AA92FF]'}`}
+              className={`-mx-1.5 w-[190px] border-none bg-transparent px-1.5 py-3 text-center font-mono text-[15px] uppercase tracking-[0.14em] ${isCurrentWeek ? 'cursor-default' : 'cursor-pointer hover:text-[#AA92FF]'}`}
               style={{ color: PAPER }}
             >
               {weekRange}
