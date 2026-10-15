@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Assignment, Course } from '../types/scheduler';
+import { themed } from '../utils/ledger';
 import { COURSE_PALETTES } from '../utils/learningEngine';
 import { newId } from '../utils/storage';
 import { DUST, INK, PAPER, RULE, TANGERINE } from '../utils/ledger';
@@ -228,7 +229,7 @@ export const CourseManagerModal: React.FC<Props> = ({ courses, assignments, onSa
                       onClick={() => setColor(p.hex)}
                       className="h-10 w-10 cursor-pointer border-none p-0"
                       style={{
-                        background: p.hex,
+                        background: themed(p.hex),
                         outline: active ? `2px solid ${PAPER}` : '2px solid transparent',
                         outlineOffset: 3,
                       }}

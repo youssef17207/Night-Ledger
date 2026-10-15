@@ -20,6 +20,407 @@
   --font-mono: 'DM Mono', monospace;
 }
 
+
+/* ---------- Themes ----------
+   Every colour in the app comes from these variables. Night is the default; the others are chosen
+   from Settings and stored on <html data-theme="...">. */
+:root {
+  --ink: #15121a;          /* page background + dark text on light cards */
+  --paper: #f1ebdd;        /* primary text + light cards */
+  --dust: #a59fb0;         /* muted text */
+  --rule: #3a3445;         /* hairlines and borders */
+  --ledger: #1d1924;       /* raised panels */
+  --today-muted: #5b5568;  /* muted text on a paper card */
+  --faint: #6f687b;        /* placeholders */
+  --lilac: #aa92ff;        /* accent: highlights, focus, shadows */
+  --aqua: #5ed9cb;
+  --tangerine: #ff9650;    /* warnings */
+  /* class colour slots: a class stores a slot, each theme paints it */
+  --cc-lilac: #aa92ff;
+  --cc-rose: #ff8ab0;
+  --cc-pistachio: #a9e67e;
+  --cc-aqua: #5ed9cb;
+  --cc-tangerine: #ff9650;
+  --cc-butter: #f4de7b;
+  --cc-sky: #82c7ff;
+  --cc-orchid: #e49bff;
+  --cc-coral: #ff7a7a;
+}
+html[data-theme='vibrant'] {
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --ink: #1a0b2e;
+  --paper: #fff4e0;
+  --dust: #c4a8f0;
+  --rule: #4b2a7b;
+  --ledger: #26134a;
+  --today-muted: #6b4a8c;
+  --faint: #8264b0;
+  --lilac: #ff5caa;
+  --aqua: #3df2d2;
+  --tangerine: #ffb020;  --cc-lilac: #b07cff;
+  --cc-rose: #ff5caa;
+  --cc-pistachio: #7cff6b;
+  --cc-aqua: #3df2d2;
+  --cc-tangerine: #ffb020;
+  --cc-butter: #ffe45c;
+  --cc-sky: #5cb8ff;
+  --cc-orchid: #e65cff;
+  --cc-coral: #ff6b6b;
+}
+html[data-theme='neon'] {
+  --font-serif: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --font-sans: 'Exo 2', system-ui, sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --ink: #05060f;
+  --paper: #e6fffb;
+  --dust: #6f8fa8;
+  --rule: #14304a;
+  --ledger: #0a1022;
+  --today-muted: #36607a;
+  --faint: #3f5f78;
+  --lilac: #00f0ff;
+  --aqua: #39ff88;
+  --tangerine: #ff2ec4;  --cc-lilac: #a66bff;
+  --cc-rose: #ff2ec4;
+  --cc-pistachio: #39ff88;
+  --cc-aqua: #00f0ff;
+  --cc-tangerine: #ff8a1f;
+  --cc-butter: #f5ff3d;
+  --cc-sky: #2e9bff;
+  --cc-orchid: #d63dff;
+  --cc-coral: #ff3d5a;
+}
+html[data-theme='noir'] {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Libre Franklin', system-ui, sans-serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+  --ink: #0b0b0c;
+  --paper: #f4f4f2;
+  --dust: #9a9a9a;
+  --rule: #2e2e30;
+  --ledger: #141415;
+  --today-muted: #6a6a6a;
+  --faint: #5a5a5a;
+  --lilac: #e5232f;
+  --aqua: #d8d8d8;
+  --tangerine: #ff7a45;  --cc-lilac: #f4f4f2;
+  --cc-rose: #e5232f;
+  --cc-pistachio: #c8c8c8;
+  --cc-aqua: #9e9e9e;
+  --cc-tangerine: #ff6b6b;
+  --cc-butter: #e8e0d0;
+  --cc-sky: #b8c4cc;
+  --cc-orchid: #8a8a8a;
+  --cc-coral: #b3202a;
+}
+html[data-theme='sunset'] {
+  --font-serif: 'DM Serif Display', Georgia, serif;
+  --font-sans: 'Nunito', system-ui, sans-serif;
+  --ink: #1c0f0a;
+  --paper: #ffebd6;
+  --dust: #c9a48c;
+  --rule: #4a2c20;
+  --ledger: #26150e;
+  --today-muted: #7a5240;
+  --faint: #86604e;
+  --lilac: #ff7a45;
+  --aqua: #ffd166;
+  --tangerine: #ff4d6d;  --cc-lilac: #e0a8ff;
+  --cc-rose: #ff6f91;
+  --cc-pistachio: #c4e26b;
+  --cc-aqua: #ffc857;
+  --cc-tangerine: #ff8a47;
+  --cc-butter: #ffe29a;
+  --cc-sky: #7fd1d9;
+  --cc-orchid: #f58fd6;
+  --cc-coral: #ff5a5a;
+}
+
+
+/* ---------- Starry: a theme with a twinkling night sky behind the page ----------
+   Four sparse star layers (different tile sizes so the pattern never visibly repeats) sit behind
+   the content and fade in and out out of step with each other. Low opacity keeps text readable. */
+html[data-theme='starry'] {
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Jost', system-ui, sans-serif;
+  --ink: #0b1026;
+  --paper: #eef2ff;
+  --dust: #8ea0cf;
+  --rule: #26315e;
+  --ledger: #121a3a;
+  --today-muted: #4c5a8c;
+  --faint: #5a6aa0;
+  --lilac: #ffd86b;
+  --aqua: #8ee3ff;
+  --tangerine: #ff9e6b;
+  --cc-lilac: #b8a8ff;
+  --cc-rose: #ff9ec7;
+  --cc-pistachio: #9be8b8;
+  --cc-aqua: #8ee3ff;
+  --cc-tangerine: #ffb36b;
+  --cc-butter: #ffe08a;
+  --cc-sky: #7fb6ff;
+  --cc-orchid: #d69bff;
+  --cc-coral: #ff8a8a;
+}
+html[data-theme='starry']::before,
+html[data-theme='starry']::after,
+html[data-theme='starry'] body::before,
+html[data-theme='starry'] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: repeat;
+  will-change: opacity;
+}
+html[data-theme='starry']::before {
+  background-image:
+    radial-gradient(circle at 173px 493px, #dfe8ff 0 0.8px, transparent 1.5px),
+    radial-gradient(circle at 32px 45px, #ffffff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 195px 306px, #dfe8ff 0 0.8px, transparent 1.5px),
+    radial-gradient(circle at 117px 27px, #eef2ff 0 0.8px, transparent 1.5px),
+    radial-gradient(circle at 43px 131px, #eef2ff 0 0.8px, transparent 1.5px),
+    radial-gradient(circle at 38px 431px, #ffffff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 330px 329px, #ffffff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 303px 307px, #ffffff 0 0.9px, transparent 1.6px),
+    radial-gradient(circle at 31px 293px, #eef2ff 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 222px 81px, #dfe8ff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 165px 294px, #ffffff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 60px 305px, #ffffff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 198px 57px, #ffffff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 296px 38px, #eef2ff 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 356px 280px, #eef2ff 0 0.9px, transparent 1.6px),
+    radial-gradient(circle at 246px 307px, #eef2ff 0 1.1px, transparent 1.8px);
+  background-size: 520px 520px;
+  animation: star-twinkle 5.5s ease-in-out infinite;
+}
+html[data-theme='starry']::after {
+  background-image:
+    radial-gradient(circle at 161px 135px, #ffd86b 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 132px 49px, #fff3c4 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 261px 183px, #dfe8ff 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 319px 45px, #ffe9a8 0 0.9px, transparent 1.6px),
+    radial-gradient(circle at 92px 395px, #ffe9a8 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 223px 28px, #ffffff 0 1.3px, transparent 2.0px),
+    radial-gradient(circle at 399px 293px, #dfe8ff 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 182px 363px, #ffe9a8 0 1.0px, transparent 1.7px),
+    radial-gradient(circle at 304px 241px, #ffffff 0 0.9px, transparent 1.6px),
+    radial-gradient(circle at 146px 250px, #ffffff 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 39px 382px, #ffd86b 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 303px 356px, #dfe8ff 0 1.2px, transparent 1.9px);
+  background-size: 410px 410px;
+  animation: star-twinkle 7.5s ease-in-out -2.5s infinite;
+}
+html[data-theme='starry'] body::before {
+  background-image:
+    radial-gradient(circle at 403px 692px, #ffffff 0 1.2px, #ffffff33 2.7px, transparent 5.0px),
+    radial-gradient(circle at 371px 180px, #ffffff 0 1.3px, #ffffff33 3.0px, transparent 5.4px),
+    radial-gradient(circle at 68px 231px, #fff3c4 0 1.4px, #fff3c433 3.1px, transparent 5.6px),
+    radial-gradient(circle at 261px 415px, #ffffff 0 1.3px, #ffffff33 2.8px, transparent 5.0px),
+    radial-gradient(circle at 90px 178px, #eef2ff 0 1.3px, #eef2ff33 2.8px, transparent 5.1px),
+    radial-gradient(circle at 292px 148px, #eef2ff 0 1.4px, #eef2ff33 3.1px, transparent 5.7px),
+    radial-gradient(circle at 293px 433px, #dfe8ff 0 1.5px, #dfe8ff33 3.3px, transparent 6.0px),
+    radial-gradient(circle at 397px 244px, #fff3c4 0 1.2px, #fff3c433 2.6px, transparent 4.6px),
+    radial-gradient(circle at 162px 245px, #ffe9a8 0 1.4px, #ffe9a833 3.0px, transparent 5.5px);
+  background-size: 730px 730px;
+  animation: star-glisten 6.5s ease-in-out -1s infinite;
+}
+html[data-theme='starry'] body::after {
+  background-image:
+    radial-gradient(circle at 504px 194px, #ffffff 0 1.1px, #ffffff33 2.4px, transparent 4.4px),
+    radial-gradient(circle at 157px 437px, #dfe8ff 0 1.2px, #dfe8ff33 2.7px, transparent 4.9px),
+    radial-gradient(circle at 587px 334px, #dfe8ff 0 1.4px, #dfe8ff33 3.0px, transparent 5.5px),
+    radial-gradient(circle at 535px 63px, #dfe8ff 0 1.2px, #dfe8ff33 2.6px, transparent 4.7px),
+    radial-gradient(circle at 580px 409px, #eef2ff 0 1.2px, #eef2ff33 2.6px, transparent 4.6px),
+    radial-gradient(circle at 114px 501px, #ffffff 0 1.3px, #ffffff33 2.8px, transparent 5.0px),
+    radial-gradient(circle at 203px 76px, #eef2ff 0 1.4px, #eef2ff33 3.1px, transparent 5.6px),
+    radial-gradient(circle at 174px 120px, #ffffff 0 1.1px, #ffffff33 2.5px, transparent 4.5px);
+  background-size: 610px 610px;
+  animation: star-glisten 9s ease-in-out -4.5s infinite;
+}
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.75; }
+}
+@keyframes star-glisten {
+  0%, 100% { opacity: 0.15; }
+  45% { opacity: 0.85; }
+  55% { opacity: 0.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='starry']::before,
+  html[data-theme='starry']::after,
+  html[data-theme='starry'] body::before,
+  html[data-theme='starry'] body::after {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+
+/* ---------- Theme atmospheres ----------
+   Each non-default theme gets a quiet animated backdrop behind the page, using the same fixed,
+   non-interactive layers Starry uses. All are slow, low-contrast and respect reduced motion. */
+html[data-theme='vibrant']::before,
+html[data-theme='vibrant']::after,
+html[data-theme='neon']::before,
+html[data-theme='neon']::after,
+html[data-theme='noir']::before,
+html[data-theme='noir']::after,
+html[data-theme='sunset']::before,
+html[data-theme='sunset']::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Vibrant: big soft colour blobs drifting slowly */
+html[data-theme='vibrant']::before {
+  inset: -20%;
+  background:
+    radial-gradient(40% 36% at 18% 24%, color-mix(in srgb, var(--lilac) 30%, transparent), transparent 70%),
+    radial-gradient(36% 40% at 82% 18%, rgba(124, 92, 255, 0.34), transparent 70%);
+  animation: blob-a 34s ease-in-out infinite alternate;
+}
+html[data-theme='vibrant']::after {
+  inset: -20%;
+  background:
+    radial-gradient(40% 40% at 72% 82%, color-mix(in srgb, var(--aqua) 22%, transparent), transparent 70%),
+    radial-gradient(32% 36% at 14% 86%, color-mix(in srgb, var(--tangerine) 20%, transparent), transparent 70%);
+  animation: blob-b 44s ease-in-out infinite alternate;
+}
+@keyframes blob-a {
+  from { transform: translate3d(-4%, -2%, 0) scale(1); }
+  to { transform: translate3d(5%, 4%, 0) scale(1.12); }
+}
+@keyframes blob-b {
+  from { transform: translate3d(4%, 3%, 0) scale(1.08); }
+  to { transform: translate3d(-5%, -4%, 0) scale(1); }
+}
+
+/* Neon: a faint grid sliding toward you, a magenta horizon glow, and glowing headings */
+html[data-theme='neon']::before {
+  inset: -56px 0 0 0;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--lilac) 15%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--lilac) 15%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, #000 0, transparent 100%);
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, #000 0, transparent 100%);
+  animation: grid-slide 7s linear infinite;
+}
+html[data-theme='neon']::after {
+  inset: 0;
+  background: radial-gradient(ellipse 80% 40% at 50% 108%, color-mix(in srgb, var(--tangerine) 26%, transparent), transparent 70%);
+  animation: glow-breathe 6s ease-in-out infinite;
+}
+html[data-theme='neon'] h1 {
+  text-shadow: 0 0 22px color-mix(in srgb, var(--lilac) 45%, transparent);
+}
+html[data-theme='neon'] nav[aria-label='Views'] button[aria-current='page'] {
+  text-shadow: 0 0 10px var(--lilac);
+}
+@keyframes grid-slide {
+  from { transform: translateY(0); }
+  to { transform: translateY(56px); }
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* Noir: shifting film grain under a soft vignette */
+html[data-theme='noir']::before {
+  inset: -120px;
+  opacity: 0.14;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.9s steps(1) infinite;
+}
+html[data-theme='noir']::after {
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, 0.6) 100%);
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-60px, 40px); }
+  40% { transform: translate(50px, -70px); }
+  60% { transform: translate(-30px, -50px); }
+  80% { transform: translate(70px, 30px); }
+  100% { transform: translate(0, 0); }
+}
+
+
+/* Noir: venetian-blind light across the page, drifting very slowly */
+html[data-theme='noir'] body::before {
+  content: '';
+  position: fixed;
+  inset: -80px;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-linear-gradient(112deg, transparent 0 54px, rgba(255, 255, 255, 0.07) 54px 92px);
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 12% 0%, #000 0, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 70% at 12% 0%, #000 0, transparent 100%);
+  will-change: transform;
+  animation: blinds-drift 26s ease-in-out infinite alternate;
+}
+@keyframes blinds-drift {
+  from { transform: translate3d(-40px, -10px, 0); }
+  to { transform: translate3d(46px, 24px, 0); }
+}
+
+/* Sunset: a glowing horizon, a breathing sun, and a few embers drifting upward */
+html[data-theme='sunset']::before {
+  inset: 0;
+  background:
+    radial-gradient(circle at 16% 108%, color-mix(in srgb, var(--lilac) 34%, transparent), transparent 42%),
+    linear-gradient(to top, color-mix(in srgb, var(--tangerine) 20%, transparent) 0, color-mix(in srgb, var(--lilac) 8%, transparent) 22%, transparent 48%);
+  animation: sun-breathe 14s ease-in-out infinite;
+}
+html[data-theme='sunset']::after {
+  inset: 0 0 -520px 0;
+  background-image:
+    radial-gradient(circle at 241px 453px, rgba(255,150,90,.9) 0 1.4px, transparent 4.3px),
+    radial-gradient(circle at 241px 270px, rgba(255,196,120,.9) 0 1.7px, transparent 5.1px),
+    radial-gradient(circle at 104px 421px, rgba(255,220,160,.8) 0 1.4px, transparent 4.2px),
+    radial-gradient(circle at 324px 416px, rgba(255,150,90,.9) 0 1.1px, transparent 3.4px),
+    radial-gradient(circle at 165px 82px, rgba(255,220,160,.8) 0 1.1px, transparent 3.2px),
+    radial-gradient(circle at 334px 31px, rgba(255,150,90,.9) 0 1.5px, transparent 4.4px),
+    radial-gradient(circle at 503px 241px, rgba(255,220,160,.8) 0 1.5px, transparent 4.6px),
+    radial-gradient(circle at 342px 90px, rgba(255,220,160,.8) 0 1.5px, transparent 4.5px),
+    radial-gradient(circle at 42px 40px, rgba(255,196,120,.9) 0 1.0px, transparent 3.1px),
+    radial-gradient(circle at 317px 25px, rgba(255,150,90,.9) 0 1.6px, transparent 4.9px);
+  background-size: 520px 520px;
+  opacity: 0.4;
+  animation: embers-rise 46s linear infinite;
+}
+@keyframes sun-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+@keyframes embers-rise {
+  from { transform: translateY(0); }
+  to { transform: translateY(-520px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='vibrant']::before,
+  html[data-theme='vibrant']::after,
+  html[data-theme='neon']::before,
+  html[data-theme='neon']::after,
+  html[data-theme='noir']::before,
+  html[data-theme='noir'] body::before,
+  html[data-theme='sunset']::before,
+  html[data-theme='sunset']::after {
+    animation: none;
+  }
+}
+
 html {
   color-scheme: dark;
 }
@@ -34,33 +435,9 @@ html[data-inverted] {
    bright colour (and dark text) instead of turning muddy. Only background / full-border / --c
    usages are matched, so coloured text and row containers are left alone. */
 html[data-inverted] :is(
-  [style*="background: rgb(170, 146, 255)"],
-  [style*="border: 2px solid rgb(170, 146, 255)"],
-  [style*="--c: #AA92FF" i],
-  [style*="background: rgb(255, 138, 176)"],
-  [style*="border: 2px solid rgb(255, 138, 176)"],
-  [style*="--c: #FF8AB0" i],
-  [style*="background: rgb(169, 230, 126)"],
-  [style*="border: 2px solid rgb(169, 230, 126)"],
-  [style*="--c: #A9E67E" i],
-  [style*="background: rgb(94, 217, 203)"],
-  [style*="border: 2px solid rgb(94, 217, 203)"],
-  [style*="--c: #5ED9CB" i],
-  [style*="background: rgb(255, 150, 80)"],
-  [style*="border: 2px solid rgb(255, 150, 80)"],
-  [style*="--c: #FF9650" i],
-  [style*="background: rgb(244, 222, 123)"],
-  [style*="border: 2px solid rgb(244, 222, 123)"],
-  [style*="--c: #F4DE7B" i],
-  [style*="background: rgb(130, 199, 255)"],
-  [style*="border: 2px solid rgb(130, 199, 255)"],
-  [style*="--c: #82C7FF" i],
-  [style*="background: rgb(228, 155, 255)"],
-  [style*="border: 2px solid rgb(228, 155, 255)"],
-  [style*="--c: #E49BFF" i],
-  [style*="background: rgb(255, 122, 122)"],
-  [style*="border: 2px solid rgb(255, 122, 122)"],
-  [style*="--c: #FF7A7A" i]
+  [style*="background: var(--cc-"],
+  [style*="border: 2px solid var(--cc-"],
+  [style*="--c: var(--cc-"]
 ) {
   /* exact inverse of the root filter (rotate after invert), so the original colour comes back */
   filter: hue-rotate(-180deg) invert(1);
@@ -68,23 +445,23 @@ html[data-inverted] :is(
 
 body {
   margin: 0;
-  background: #15121a;
-  color: #f1ebdd;
-  font-family: 'Bricolage Grotesque', sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: #aa92ff;
-  color: #15121a;
+  background: var(--lilac);
+  color: var(--ink);
 }
 
 a {
-  color: #f1ebdd;
+  color: var(--paper);
   text-decoration: none;
 }
 a:hover {
-  color: #aa92ff;
+  color: var(--lilac);
 }
 
 button {
@@ -122,7 +499,7 @@ button {
   border: 2px solid currentColor;
   border-radius: 0;
   background: transparent;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -130,8 +507,8 @@ button {
   cursor: pointer;
 }
 .sel option {
-  color: #15121a;
-  background: #f1ebdd;
+  color: var(--ink);
+  background: var(--paper);
 }
 .sel:focus-visible {
   outline: 2px solid currentColor;
@@ -144,26 +521,26 @@ button {
   box-sizing: border-box;
   min-height: 44px;
   padding: 10px 12px;
-  border: 2px solid #3a3445;
+  border: 2px solid var(--rule);
   border-radius: 0;
-  background: #15121a;
-  color: #f1ebdd;
-  font-family: 'Bricolage Grotesque', sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 500;
 }
 .fld::placeholder {
-  color: #6f687b;
+  color: var(--faint);
 }
 .fld:hover {
-  border-color: #a59fb0;
+  border-color: var(--dust);
 }
 .fld:focus {
   outline: none;
-  border-color: #f1ebdd;
+  border-color: var(--paper);
 }
 .fld.mono {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 14px;
 }
 textarea.fld {
@@ -171,7 +548,7 @@ textarea.fld {
 }
 
 input[type='range'] {
-  accent-color: #f1ebdd;
+  accent-color: var(--paper);
   width: 100%;
   height: 28px;
   cursor: pointer;
@@ -180,7 +557,7 @@ input[type='range'] {
 button:focus-visible,
 a:focus-visible,
 summary:focus-visible {
-  outline: 2px solid #aa92ff;
+  outline: 2px solid var(--lilac);
   outline-offset: 3px;
 }
 
@@ -258,7 +635,7 @@ button[data-boxed]:not(:disabled):active {
 /* Thin dark scrollbars inside modals */
 .thin-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #3a3445 transparent;
+  scrollbar-color: var(--rule) transparent;
 }
 
 @keyframes ledger-in {
@@ -279,4 +656,10 @@ button[data-boxed]:not(:disabled):active {
   .ledger-in {
     animation: none;
   }
+}
+
+/* Theme swatches show their own colours; skip the hover inversion */
+button.theme-swatch:hover {
+  filter: none !important;
+  box-shadow: none !important;
 }

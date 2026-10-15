@@ -162,11 +162,11 @@ export const TodayView: React.FC<Props> = ({
             <AddCircle onClick={onAdd} />
           </div>
           {slippedCount > 0 && (
-            <div className="flex flex-col gap-3 p-4" style={{ border: '2px solid #FF9650' }}>
+            <div className="flex flex-col gap-3 p-4" style={{ border: '2px solid var(--tangerine)' }}>
               <span className="text-[15px] font-medium">
                 {slippedCount} study {slippedCount === 1 ? 'block has' : 'blocks have'} slipped past.
               </span>
-              <Btn variant="solid" bg="#FF9650" onClick={onAutoFix}>
+              <Btn variant="solid" bg="var(--tangerine)" onClick={onAutoFix}>
                 Auto-fix schedule
               </Btn>
             </div>
@@ -180,14 +180,14 @@ export const TodayView: React.FC<Props> = ({
           style={{ background: PAPER, color: INK, boxShadow: `8px 8px 0 ${nextColor}`, padding: '28px 24px' }}
         >
           <div className="flex min-w-0 flex-[1_1_360px] flex-col gap-3">
-            <span className="font-mono text-[13px] uppercase" style={{ letterSpacing: '0.14em', color: '#5B5568' }}>
+            <span className="font-mono text-[13px] uppercase" style={{ letterSpacing: '0.14em', color: 'var(--today-muted)' }}>
               Do this next · {nextStatus}
             </span>
             <div className="flex flex-wrap items-center gap-3">
               <Tag color={nextColor} title={nextAssignment?.courseName}>
                 {courseCodeOf(nextAssignment, courseMap)}
               </Tag>
-              <span className="font-mono text-[14px]" style={{ color: '#5B5568' }}>
+              <span className="font-mono text-[14px]" style={{ color: 'var(--today-muted)' }}>
                 {fmtHHMM(nextChunk.scheduledStartTime)}–{fmtHHMM(nextChunk.scheduledEndTime)} · {nextChunk.durationMinutes} min
               </span>
             </div>
@@ -198,7 +198,7 @@ export const TodayView: React.FC<Props> = ({
               {nextChunk.chunkLabel}
             </h2>
             {nextAssignment && (
-              <span className="font-mono text-[13px]" style={{ color: '#5B5568' }}>
+              <span className="font-mono text-[13px]" style={{ color: 'var(--today-muted)' }}>
                 Due {fmtMonthDay(dueDateOf(nextAssignment))}
               </span>
             )}

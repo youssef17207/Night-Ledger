@@ -1,5 +1,5 @@
 import React from 'react';
-import { DUST, LILAC, PAPER } from '../utils/ledger';
+import { DUST, LILAC, PAPER, THEMES, applyTheme, currentTheme } from '../utils/ledger';
 
 export type DashboardTab = 'week' | 'today' | 'homework';
 
@@ -34,7 +34,7 @@ const ToolLink: React.FC<{ onClick: () => void; children: React.ReactNode; title
     title={title}
     aria-expanded={expanded}
     aria-haspopup={expanded === undefined ? undefined : 'menu'}
-    className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-2 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[#AA92FF]"
+    className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-2 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[var(--lilac)]"
     style={{ color: DUST }}
   >
     {children}
@@ -69,7 +69,7 @@ const MoreMenu: React.FC<{ items: Array<{ label: string; title?: string; run: ()
         <div
           role="menu"
           className="tool-menu absolute left-[-14px] top-full z-20 mt-1 flex min-w-[230px] flex-col py-2"
-          style={{ background: '#1D1924', border: '1px solid #3A3445', boxShadow: '6px 6px 0 #AA92FF' }}
+          style={{ background: 'var(--ledger)', border: '1px solid var(--rule)', boxShadow: '6px 6px 0 var(--lilac)' }}
         >
           {items.map((it) => (
             <button
@@ -98,11 +98,11 @@ const Logo: React.FC = () => (
   <span className="mr-2 flex items-center gap-3 normal-case" style={{ color: PAPER, letterSpacing: 'normal' }} aria-label="Night Ledger">
     <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" className="flex-none">
       <rect width="38" height="38" fill={PAPER} />
-      <circle cx="17" cy="16" r="10" fill="#15121A" />
+      <circle cx="17" cy="16" r="10" fill="var(--ink)" />
       <circle cx="22" cy="13" r="9" fill={PAPER} />
-      <rect x="6" y="28" width="26" height="2" fill="#15121A" />
-      <rect x="6" y="32" width="16" height="2" fill="#15121A" />
-      <circle cx="29" cy="9" r="2.2" fill="#7E5BFF" />
+      <rect x="6" y="28" width="26" height="2" fill="var(--ink)" />
+      <rect x="6" y="32" width="16" height="2" fill="var(--ink)" />
+      <circle cx="29" cy="9" r="2.2" fill="var(--lilac)" />
     </svg>
     <span className="font-serif text-[30px] leading-none tracking-[0.005em]">
       <span className="italic">Night</span> Ledger
@@ -149,7 +149,7 @@ export const Header: React.FC<Props> = ({
                   type="button"
                   onClick={() => onTab(t.id)}
                   aria-current={active ? 'page' : undefined}
-                  className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[#F1EBDD]"
+                  className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[var(--paper)]"
                   style={{
                     color: active ? PAPER : DUST,
                     boxShadow: active ? `inset 0 -2px 0 ${LILAC}` : 'none',
@@ -167,7 +167,7 @@ export const Header: React.FC<Props> = ({
             <button
               type="button"
               onClick={onPrevWeek}
-              className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[#AA92FF]"
+              className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[var(--lilac)]"
               style={{ color: DUST }}
             >
               ← Prev
@@ -177,7 +177,7 @@ export const Header: React.FC<Props> = ({
               onClick={onThisWeek}
               disabled={isCurrentWeek}
               title={isCurrentWeek ? 'This week' : 'Jump to this week'}
-              className={`-mx-1.5 w-[190px] border-none bg-transparent px-1.5 py-3 text-center font-mono text-[15px] uppercase tracking-[0.14em] ${isCurrentWeek ? 'cursor-default' : 'cursor-pointer hover:text-[#AA92FF]'}`}
+              className={`-mx-1.5 w-[190px] border-none bg-transparent px-1.5 py-3 text-center font-mono text-[15px] uppercase tracking-[0.14em] ${isCurrentWeek ? 'cursor-default' : 'cursor-pointer hover:text-[var(--lilac)]'}`}
               style={{ color: PAPER }}
             >
               {weekRange}
@@ -185,7 +185,7 @@ export const Header: React.FC<Props> = ({
             <button
               type="button"
               onClick={onNextWeek}
-              className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[#AA92FF]"
+              className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-3 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[var(--lilac)]"
               style={{ color: DUST }}
             >
               Next →
@@ -245,10 +245,11 @@ export const Footer: React.FC<FooterProps> = ({
     setInverted(next);
   };
   const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [theme, setTheme] = React.useState(currentTheme);
   const link =
-    'cursor-pointer border-none bg-transparent py-2 font-mono text-[12px] uppercase tracking-[0.08em] transition-colors hover:text-[#AA92FF]';
+    'cursor-pointer border-none bg-transparent py-2 font-mono text-[12px] uppercase tracking-[0.08em] transition-colors hover:text-[var(--lilac)]';
   return (
-    <footer className="mt-10 flex flex-col gap-2 pt-5" style={{ borderTop: '1px solid #3A3445' }}>
+    <footer className="mt-10 flex flex-col gap-2 pt-5" style={{ borderTop: '1px solid var(--rule)' }}>
       <div>
         <button
           type="button"
@@ -260,6 +261,34 @@ export const Footer: React.FC<FooterProps> = ({
           Settings & backup {settingsOpen ? '▴' : '▾'}
         </button>
       </div>
+      {settingsOpen && (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 py-2" role="radiogroup" aria-label="Theme">
+          <span className="font-mono text-[12px] uppercase tracking-[0.08em]" style={{ color: DUST }}>
+            Theme
+          </span>
+          {THEMES.map((t) => {
+            const on = theme === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                title={t.name}
+                onClick={() => {
+                  applyTheme(t.id);
+                  setTheme(t.id);
+                }}
+                className="theme-swatch flex cursor-pointer items-center gap-2 border-none px-2 py-1 font-mono text-[12px] uppercase tracking-[0.08em]"
+                style={{ background: t.bg, color: t.text, outline: on ? `2px solid ${t.accent}` : '2px solid transparent', outlineOffset: 2 }}
+              >
+                <span className="inline-block h-3 w-3" style={{ background: t.accent }} />
+                {t.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
       {settingsOpen && (
       <div className="flex flex-wrap items-center gap-x-6">
         <button type="button" className={link} style={{ color: DUST }} onClick={onToggleSound}>
@@ -301,7 +330,7 @@ export const Footer: React.FC<FooterProps> = ({
             e.target.value = '';
           }}
         />
-        <button type="button" className={link} style={{ color: '#FF9650' }} onClick={onReset}>
+        <button type="button" className={link} style={{ color: 'var(--tangerine)' }} onClick={onReset}>
           Erase everything
         </button>
       </div>
@@ -318,7 +347,7 @@ export const Footer: React.FC<FooterProps> = ({
           href="https://www.linkedin.com/in/youssef-saleh-082708403/"
           target="_blank"
           rel="noopener noreferrer"
-          className="uppercase tracking-[0.08em] transition-colors hover:text-[#AA92FF]"
+          className="uppercase tracking-[0.08em] transition-colors hover:text-[var(--lilac)]"
         >
           LinkedIn
         </a>
@@ -326,7 +355,7 @@ export const Footer: React.FC<FooterProps> = ({
           href="https://github.com/youssef17207"
           target="_blank"
           rel="noopener noreferrer"
-          className="uppercase tracking-[0.08em] transition-colors hover:text-[#AA92FF]"
+          className="uppercase tracking-[0.08em] transition-colors hover:text-[var(--lilac)]"
         >
           GitHub
         </a>

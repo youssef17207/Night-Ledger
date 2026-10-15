@@ -498,7 +498,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ background: INK, color: PAPER }}>
+    <div className="flex min-h-screen flex-col" style={{ color: PAPER }}>
       {toast && (
         <aside
           aria-live="polite"
@@ -719,7 +719,7 @@ export default function App() {
           }
           onClose={() => setResetOpen(false)}
           width={520}
-          accent="#FF9650"
+          accent="var(--tangerine)"
           footer={
             <>
               <Btn variant="ghost" onClick={() => setResetOpen(false)}>

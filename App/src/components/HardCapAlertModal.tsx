@@ -76,7 +76,7 @@ export const HardCapAlertModal: React.FC<Props> = ({ hardCapResult, onApplyRecom
               key={i}
               type="button"
               onClick={() => onApplyRecommendation(rec)}
-              className="flex cursor-pointer flex-col gap-1 p-4 text-left transition-colors hover:bg-[#15121A]"
+              className="flex cursor-pointer flex-col gap-1 p-4 text-left transition-colors hover:bg-[var(--ink)]"
               style={{ border: `2px solid ${RULE}`, background: 'transparent', color: 'inherit' }}
             >
               <span className="flex items-center justify-between gap-3 text-[15px] font-semibold uppercase" style={{ letterSpacing: '0.04em' }}>

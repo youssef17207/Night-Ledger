@@ -12,7 +12,7 @@ import {
 import { CATEGORY_PRESETS, getSmartDurationSuggestion } from '../utils/learningEngine';
 import { checkHardCapBoundary } from '../utils/schedulerEngine';
 import { newId } from '../utils/storage';
-import { AQUA, DUST, INK, PAPER, TANGERINE, fmtDuration, fmtHours, fmtMonthDay, fmtClock, toLocalInput } from '../utils/ledger';
+import { themed, AQUA, DUST, INK, PAPER, TANGERINE, fmtDuration, fmtHours, fmtMonthDay, fmtClock, toLocalInput } from '../utils/ledger';
 import { Btn, Chip, FieldLabel, Label, Modal, Tag } from './ui';
 
 interface Props {
@@ -162,7 +162,7 @@ export const AddAssignmentModal: React.FC<Props> = ({
       }
       onClose={onClose}
       onSubmit={handleSubmit}
-      accent={selectedCourse?.color}
+      accent={selectedCourse ? themed(selectedCourse.color) : undefined}
       footer={
         <>
           <Btn type="button" variant="ghost" onClick={onClose}>

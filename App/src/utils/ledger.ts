@@ -2,16 +2,35 @@ import { Assignment, AssignmentStatus, Course, TaskChunk } from '../types/schedu
 import { formatDateKey, parseDateKey, timeToMinutes } from './schedulerEngine';
 
 /* Night Ledger palette (from "Palette & type") */
-export const INK = '#15121A';
-export const PAPER = '#F1EBDD';
-export const DUST = '#A59FB0';
-export const RULE = '#3A3445';
-export const LEDGER = '#1D1924';
-export const TODAY_MUTED = '#5B5568';
-export const LILAC = '#AA92FF';
-export const AQUA = '#5ED9CB';
-export const TANGERINE = '#FF9650';
-export const FALLBACK_COLOR = '#A59FB0';
+// Palette constants point at theme variables (defined per theme in index.css), so every inline
+// style that uses them re-colours when the theme changes.
+export const INK = 'var(--ink)';
+export const PAPER = 'var(--paper)';
+export const DUST = 'var(--dust)';
+export const RULE = 'var(--rule)';
+export const LEDGER = 'var(--ledger)';
+export const TODAY_MUTED = 'var(--today-muted)';
+export const LILAC = 'var(--lilac)';
+export const AQUA = 'var(--aqua)';
+export const TANGERINE = 'var(--tangerine)';
+export const FALLBACK_COLOR = 'var(--dust)';
+
+/** A class stores one of nine palette hexes; each theme repaints that slot (--cc-* in index.css). */
+const CLASS_SLOT: Record<string, string> = {
+  '#aa92ff': 'lilac',
+  '#ff8ab0': 'rose',
+  '#a9e67e': 'pistachio',
+  '#5ed9cb': 'aqua',
+  '#ff9650': 'tangerine',
+  '#f4de7b': 'butter',
+  '#82c7ff': 'sky',
+  '#e49bff': 'orchid',
+  '#ff7a7a': 'coral',
+};
+export function themed(color: string): string {
+  const slot = CLASS_SLOT[color.toLowerCase()];
+  return slot ? `var(--cc-${slot})` : color;
+}
 
 export type UiStatus = 'todo' | 'progress' | 'done';
 
@@ -20,6 +39,101 @@ export const toUiStatus = (s: AssignmentStatus): UiStatus =>
 
 export const fromUiStatus = (s: UiStatus): AssignmentStatus =>
   s === 'done' ? 'Completed' : s === 'progress' ? 'In Progress' : 'Pending';
+
+/* ---------- themes ---------- */
+
+export interface ThemeDef {
+  id: string;
+  name: string;
+  /** Swatch preview only; the real values live in index.css. */
+  bg: string;
+  text: string;
+  accent: string;
+  /** Google Fonts css2 family parameters for this theme's typefaces (night's ship with the page). */
+  fonts?: string;
+}
+
+export const THEMES: ThemeDef[] = [
+  { id: 'night', name: 'Night', bg: '#15121A', text: '#F1EBDD', accent: '#AA92FF' },
+  {
+    id: 'starry', name: 'Starry', bg: '#0B1026', text: '#EEF2FF', accent: '#FFD86B',
+    fonts: 'family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500;600',
+  },
+  {
+    id: 'vibrant', name: 'Vibrant', bg: '#1A0B2E', text: '#FFF4E0', accent: '#FF5CAA',
+    fonts: 'family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600&family=Space+Mono:wght@400;700',
+  },
+  {
+    id: 'neon', name: 'Neon', bg: '#05060F', text: '#E6FFFB', accent: '#00F0FF',
+    fonts: 'family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=Share+Tech+Mono',
+  },
+  {
+    id: 'noir', name: 'Noir', bg: '#0B0B0C', text: '#F4F4F2', accent: '#E5232F',
+    fonts: 'family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Libre+Franklin:wght@400;500;600&family=Courier+Prime:wght@400;700',
+  },
+  {
+    id: 'sunset', name: 'Sunset', bg: '#1C0F0A', text: '#FFEBD6', accent: '#FF7A45',
+    fonts: 'family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;500;600',
+  },
+];
+
+const THEME_KEY = 'night-ledger-theme';
+
+export function currentTheme(): string {
+  const t = document.documentElement.getAttribute('data-theme');
+  return t && THEMES.some((x) => x.id === t) ? t : 'night';
+}
+
+/** Load a theme's typefaces on demand, so people only download the fonts of the theme they use. */
+function ensureThemeFonts(id: string): void {
+  const fonts = THEMES.find((t) => t.id === id)?.fonts;
+  if (!fonts || document.querySelector(`link[data-theme-fonts="${id}"]`)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?${fonts}&display=swap`;
+  link.setAttribute('data-theme-fonts', id);
+  document.head.appendChild(link);
+}
+
+/** Switch theme: set the attribute, remember it, and reset any colours cached from the old theme. */
+export function applyTheme(id: string, persist = true): void {
+  const root = document.documentElement;
+  if (id === 'night') root.removeAttribute('data-theme');
+  else root.setAttribute('data-theme', id);
+  ensureThemeFonts(id);
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_KEY, id);
+    } catch {
+      /* storage blocked: the choice just won't persist */
+    }
+  }
+  // Hover colours are cached per button on first hover; drop them so they re-read the new theme.
+  document.querySelectorAll<HTMLElement>('[data-text],[data-outlined]').forEach((el) => {
+    el.removeAttribute('data-text');
+    el.removeAttribute('data-outlined');
+    el.style.removeProperty('--hv-bg');
+    el.style.removeProperty('--hv-fg');
+  });
+  const ink = getComputedStyle(root).getPropertyValue('--ink').trim();
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', ink);
+}
+
+export function loadSavedTheme(): void {
+  try {
+    const t = localStorage.getItem(THEME_KEY);
+    if (t && THEMES.some((x) => x.id === t)) applyTheme(t, false);
+  } catch {
+    /* storage blocked */
+  }
+}
+
+/** Real colour value for canvas use (confetti can't read CSS variables). */
+export function resolveColor(c: string): string {
+  const m = /^var\((--[\w-]+)\)$/.exec(c);
+  if (!m) return c;
+  return getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim() || c;
+}
 
 /* ---------- dates ---------- */
 
@@ -142,7 +256,7 @@ export function courseOf(a: Assignment | undefined, courses: Map<string, Course>
 
 export function courseColorOf(a: Assignment | undefined, courses: Map<string, Course>): string {
   const c = courseOf(a, courses);
-  return c?.color || a?.courseColor || FALLBACK_COLOR;
+  return themed(c?.color || a?.courseColor || FALLBACK_COLOR);
 }
 
 export function courseCodeOf(a: Assignment | undefined, courses: Map<string, Course>): string {
@@ -184,7 +298,7 @@ export function buildClassBars(courses: Course[], assignments: Assignment[]): Cl
       courseId: course.id,
       name: course.code,
       fullName: course.name,
-      color: course.color,
+      color: themed(course.color),
       open: open.length,
       inProgress,
       segs,

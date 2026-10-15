@@ -122,7 +122,7 @@ export const AvailabilityManagerModal: React.FC<Props> = ({ windows: initialWind
       }
       onClose={onClose}
       width={720}
-      accent="#5ED9CB"
+      accent="var(--aqua)"
       footer={
         <>
           <Btn variant="ghost" onClick={onClose}>
@@ -170,7 +170,7 @@ export const AvailabilityManagerModal: React.FC<Props> = ({ windows: initialWind
                   }}
                 >
                   <span className="font-mono text-[12px] font-medium uppercase tracking-[0.06em]">{DAY_SHORT[d]}</span>
-                  <span className="font-mono text-[11px]" style={{ color: active ? '#5B5568' : DUST }}>
+                  <span className="font-mono text-[11px]" style={{ color: active ? 'var(--today-muted)' : DUST }}>
                     {count}
                   </span>
                 </button>

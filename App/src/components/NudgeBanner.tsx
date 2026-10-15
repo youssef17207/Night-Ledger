@@ -84,7 +84,7 @@ export const NudgeBanner: React.FC<Props> = ({ now, chunks, assignments, onStart
             {slippedCount} study {slippedCount === 1 ? 'block' : 'blocks'} slipped past. Move {slippedCount === 1 ? 'it' : 'them'} to
             open slots?
           </span>
-          <button type="button" className={btn} style={{ background: INK, color: '#F1EBDD' }} onClick={onAutoFix}>
+          <button type="button" className={btn} style={{ background: INK, color: 'var(--paper)' }} onClick={onAutoFix}>
             Auto-fix now
           </button>
         </div>
@@ -116,7 +116,7 @@ export const NudgeBanner: React.FC<Props> = ({ now, chunks, assignments, onStart
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={btn} style={{ background: INK, color: '#F1EBDD' }} onClick={() => onStartFocus(current)}>
+          <button type="button" className={btn} style={{ background: INK, color: 'var(--paper)' }} onClick={() => onStartFocus(current)}>
             ▶ Start now
           </button>
           <button

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { DUST, INK, LEDGER, LILAC, PAPER, RULE } from '../utils/ledger';
+import { DUST, INK, LEDGER, LILAC, PAPER, RULE, themed } from '../utils/ledger';
 
 /** Small mono caption, e.g. "AFTER THAT". */
 export const Label: React.FC<{
@@ -29,7 +29,7 @@ export const Tag: React.FC<{
     className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap align-middle font-mono text-[12px] font-medium uppercase ${className}`}
     style={{
       padding: '3px 9px',
-      background: color,
+      background: themed(color),
       color: INK,
       letterSpacing: '0.06em',
     }}
@@ -72,7 +72,7 @@ export const Btn: React.FC<BtnProps> = ({ variant = 'line', bg, small, className
     variant === 'solid'
       ? { background: bg ?? PAPER, color: INK, border: `2px solid ${bg ?? PAPER}` }
       : variant === 'danger'
-      ? { background: 'transparent', color: '#FF9650', border: '2px solid #FF9650' }
+      ? { background: 'transparent', color: 'var(--tangerine)', border: '2px solid var(--tangerine)' }
       : variant === 'ghost'
       ? { background: 'transparent', color: DUST, border: '2px solid transparent' }
       : { background: 'transparent', color: 'inherit', border: '2px solid currentColor' };
@@ -97,8 +97,8 @@ export const Chip: React.FC<
     {...rest}
     className={`inline-flex h-9 flex-none cursor-pointer items-center gap-2 px-3 font-mono text-[12px] font-medium uppercase tracking-[0.06em] transition-colors ${className}`}
     style={{
-      border: `2px solid ${active ? color ?? PAPER : RULE}`,
-      background: active ? color ?? PAPER : 'transparent',
+      border: `2px solid ${active ? (color ? themed(color) : PAPER) : RULE}`,
+      background: active ? (color ? themed(color) : PAPER) : 'transparent',
       color: active ? INK : PAPER,
       ...style,
     }}
@@ -217,7 +217,7 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6"
-      style={{ background: 'rgba(21,18,26,0.88)' }}
+      style={{ background: 'color-mix(in srgb, var(--ink) 88%, transparent)' }}
     >
       <div
         ref={panelRef}

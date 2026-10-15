@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Assignment, TaskChunk } from '../types/scheduler';
 import { sounds } from '../utils/audioAlerts';
-import { DUST, INK, LEDGER, LILAC, PAPER, RULE, courseColorOf, fmtHHMM } from '../utils/ledger';
+import { DUST, INK, LEDGER, LILAC, PAPER, RULE, courseColorOf, fmtHHMM, resolveColor } from '../utils/ledger';
 import { Btn, Label, Tag } from './ui';
 
 interface Props {
@@ -49,7 +49,7 @@ export const FocusTimerModal: React.FC<Props> = ({ chunk, assignment, courseColo
     if (isActive && secondsRemaining === 0) {
       setIsActive(false);
       sounds.playTimerComplete();
-      confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 }, colors: [color, PAPER, LILAC] });
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 }, colors: [resolveColor(color), resolveColor(PAPER), resolveColor(LILAC)] });
     }
   }, [secondsRemaining, isActive, color]);
 
@@ -118,7 +118,7 @@ export const FocusTimerModal: React.FC<Props> = ({ chunk, assignment, courseColo
 
   const handleFinish = () => {
     sounds.playSuccessChime();
-    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [color, PAPER, LILAC] });
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [resolveColor(color), resolveColor(PAPER), resolveColor(LILAC)] });
     const actual = Math.max(1, Math.round(elapsedSeconds / 60));
     onComplete(chunk.id, actual);
     onClose();
@@ -154,7 +154,7 @@ export const FocusTimerModal: React.FC<Props> = ({ chunk, assignment, courseColo
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6" style={{ background: 'rgba(21,18,26,0.92)' }}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6" style={{ background: 'color-mix(in srgb, var(--ink) 92%, transparent)' }}>
       <div
         role="dialog"
         aria-modal="true"

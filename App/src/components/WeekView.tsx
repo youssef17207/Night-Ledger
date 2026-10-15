@@ -556,7 +556,7 @@ const GettingStarted: React.FC<{
         <h2 className="m-0 font-serif text-[44px] font-normal italic leading-none" style={{ letterSpacing: '-0.02em' }}>
           A blank ledger.
         </h2>
-        <span className="font-mono text-[13px] uppercase" style={{ letterSpacing: '0.08em', color: '#5B5568' }}>
+        <span className="font-mono text-[13px] uppercase" style={{ letterSpacing: '0.08em', color: 'var(--today-muted)' }}>
           Three steps to get going
         </span>
       </div>
@@ -565,7 +565,7 @@ const GettingStarted: React.FC<{
           <div
             key={s.n}
             className="flex flex-wrap items-center gap-x-4 gap-y-2 py-4"
-            style={{ borderTop: '1px solid rgba(21,18,26,0.25)', opacity: s.done ? 0.55 : 1 }}
+            style={{ borderTop: '1px solid color-mix(in srgb, var(--ink) 25%, transparent)', opacity: s.done ? 0.55 : 1 }}
           >
             <span
               className="flex h-[22px] w-[22px] flex-none items-center justify-center font-mono text-[12px] font-medium"
@@ -578,7 +578,7 @@ const GettingStarted: React.FC<{
               <div className="text-[17px] font-semibold uppercase" style={{ letterSpacing: '0.05em' }}>
                 {s.title}
               </div>
-              <div className="text-[15px]" style={{ color: '#5B5568' }}>
+              <div className="text-[15px]" style={{ color: 'var(--today-muted)' }}>
                 {s.body}
               </div>
             </div>

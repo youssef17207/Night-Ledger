@@ -12,6 +12,7 @@ import {
   startOfDay,
   startOfWeek,
   MS_DAY,
+  themed,
 } from '../utils/ledger';
 import { AssignmentRow, NIGHT_TONE } from './Rows';
 import { AddCircle, Btn, Chip } from './ui';
@@ -139,7 +140,7 @@ export const HomeworkView: React.FC<Props> = ({
               active={classFilter === c.id}
               color={c.color}
               onClick={() => setClassFilter(classFilter === c.id ? 'all' : c.id)}
-              style={classFilter === c.id ? undefined : { boxShadow: `inset 4px 0 0 ${c.color}` }}
+              style={classFilter === c.id ? undefined : { boxShadow: `inset 4px 0 0 ${themed(c.color)}` }}
               title={c.name}
             >
               {c.code}

@@ -1,6 +1,9 @@
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { loadSavedTheme } from './utils/ledger';
+
+loadSavedTheme();
 
 try {
   if (localStorage.getItem('night-ledger-inverted') === '1') document.documentElement.setAttribute('data-inverted', '');
