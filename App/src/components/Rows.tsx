@@ -37,6 +37,8 @@ interface AssignmentRowProps {
   now: Date;
   /** 'time' = 9:00 (inside a day section), 'date' = Oct 3 9:00 (late carry-over) */
   whenMode?: 'time' | 'date';
+  /** Show the To do / In progress / Done dropdown (the detail view always has it). */
+  showStatus?: boolean;
   onSetStatus: (id: string, status: UiStatus) => void;
   onOpen: (id: string) => void;
 }
@@ -48,6 +50,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
   tone,
   now,
   whenMode = 'time',
+  showStatus = true,
   onSetStatus,
   onOpen,
 }) => {
@@ -103,6 +106,15 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
       <span className="flex-none font-mono text-[14px]" style={{ color: tone.muted }}>
         {whenMode === 'date' ? `${fmtMonthDay(due)} ${fmtClock(due)}` : fmtClock(due)}
       </span>
+      {!showStatus && inProgress && (
+        <span
+          className="flex-none font-mono text-[11px] font-medium uppercase"
+          style={{ padding: '2px 6px', background: color, color: INK, letterSpacing: '0.06em' }}
+        >
+          In progress
+        </span>
+      )}
+      {showStatus && (
       <span className="relative flex flex-none">
         <select
           className="sel"
@@ -127,6 +139,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
           ▾
         </span>
       </span>
+      )}
     </div>
   );
 };
@@ -176,6 +189,7 @@ export const BlockRow: React.FC<BlockRowProps> = ({
   const done = chunk.status === 'Completed';
   const slipped = isChunkSlipped(chunk, now);
   const code = courseCodeOf(assignment, courses);
+  const [adjusting, setAdjusting] = React.useState(false);
 
   return (
     <div className="flex min-h-[48px] flex-wrap items-center gap-x-3 gap-y-1" style={{ opacity: done ? 0.5 : 1 }}>
@@ -222,6 +236,15 @@ export const BlockRow: React.FC<BlockRowProps> = ({
             ▶ Timer
           </CtlButton>
           {variant === 'week' && onShift && onResize && (
+            <CtlButton
+              onClick={() => setAdjusting((a) => !a)}
+              aria-expanded={adjusting}
+              title="Move or resize this block"
+            >
+              {adjusting ? 'Done' : 'Adjust'}
+            </CtlButton>
+          )}
+          {variant === 'week' && adjusting && onShift && onResize && (
             <>
               <CtlButton onClick={() => onShift(chunk, -1)} title="Move one day earlier" aria-label="Move one day earlier">
                 ←

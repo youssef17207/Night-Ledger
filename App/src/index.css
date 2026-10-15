@@ -220,10 +220,18 @@ nav[aria-label='Views'] button:focus-visible,
   text-decoration: underline;
   text-underline-offset: 6px;
 }
+/* "More" menu items: full-width row highlight instead of the pill */
+.tool-row .tool-menu button[data-text]:not(:disabled):hover {
+  background-size: 100% 100%;
+}
 /* Those rows have no inline shadow, so drop the generic halo; the gradient is the box */
 .week-row button[data-text]:not(:disabled):hover,
 .tool-row button[data-text]:not(:disabled):hover {
   box-shadow: none;
+}
+.tool-menu button:focus-visible {
+  outline: none;
+  text-decoration: underline;
 }
 /* The classes / free hours row has less vertical padding, so it trims less (same box height) */
 .tool-row button[data-text]:not(:disabled):hover {

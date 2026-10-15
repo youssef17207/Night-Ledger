@@ -22,21 +22,76 @@ interface Props {
 
 const mono = 'font-mono text-[13px] uppercase';
 
-const ToolLink: React.FC<{ onClick: () => void; children: React.ReactNode; title?: string }> = ({
+const ToolLink: React.FC<{ onClick: () => void; children: React.ReactNode; title?: string; expanded?: boolean }> = ({
   onClick,
   children,
   title,
+  expanded,
 }) => (
   <button
     type="button"
     onClick={onClick}
     title={title}
+    aria-expanded={expanded}
+    aria-haspopup={expanded === undefined ? undefined : 'menu'}
     className="-mx-1.5 cursor-pointer border-none bg-transparent px-1.5 py-2 font-mono text-[15px] uppercase tracking-[0.14em] transition-colors hover:text-[#AA92FF]"
     style={{ color: DUST }}
   >
     {children}
   </button>
 );
+
+/** "More" dropdown: keeps the secondary links out of sight until they are wanted. */
+const MoreMenu: React.FC<{ items: Array<{ label: string; title?: string; run: () => void }> }> = ({ items }) => {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef<HTMLSpanElement>(null);
+  React.useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+  return (
+    <span ref={ref} className="relative">
+      <ToolLink onClick={() => setOpen((o) => !o)} expanded={open} title="Auto-fix, features and how it works">
+        More {open ? '▴' : '▾'}
+      </ToolLink>
+      {open && (
+        <div
+          role="menu"
+          className="tool-menu absolute left-[-14px] top-full z-20 mt-1 flex min-w-[230px] flex-col py-2"
+          style={{ background: '#1D1924', border: '1px solid #3A3445', boxShadow: '6px 6px 0 #AA92FF' }}
+        >
+          {items.map((it) => (
+            <button
+              key={it.label}
+              type="button"
+              role="menuitem"
+              title={it.title}
+              onClick={() => {
+                setOpen(false);
+                it.run();
+              }}
+              className="cursor-pointer border-none bg-transparent px-4 py-3 text-left font-mono text-[14px] uppercase tracking-[0.14em] transition-colors"
+              style={{ color: DUST }}
+            >
+              {it.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </span>
+  );
+};
 
 /** Wordmark: a crescent-over-ledger-lines mark beside "Night Ledger" set in the display serif. */
 const Logo: React.FC = () => (
@@ -146,13 +201,13 @@ export const Header: React.FC<Props> = ({
         <ToolLink onClick={onOpenHours} title="Tell Night Ledger when you are free to study">
           Free hours
         </ToolLink>
-        <ToolLink onClick={onAutoFix} title="Move missed study blocks into the next open slots">
-          Auto-fix
-        </ToolLink>
-        <ToolLink onClick={onOpenFeatures} title="See everything Night Ledger can do">
-          Features
-        </ToolLink>
-        <ToolLink onClick={onOpenHelp}>How it works</ToolLink>
+        <MoreMenu
+          items={[
+            { label: 'Auto-fix', title: 'Move missed study blocks into the next open slots', run: onAutoFix },
+            { label: 'Features', title: 'See everything Night Ledger can do', run: onOpenFeatures },
+            { label: 'How it works', run: onOpenHelp },
+          ]}
+        />
       </div>
     </div>
   );
@@ -189,10 +244,23 @@ export const Footer: React.FC<FooterProps> = ({
     }
     setInverted(next);
   };
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
   const link =
     'cursor-pointer border-none bg-transparent py-2 font-mono text-[12px] uppercase tracking-[0.08em] transition-colors hover:text-[#AA92FF]';
   return (
     <footer className="mt-10 flex flex-col gap-2 pt-5" style={{ borderTop: '1px solid #3A3445' }}>
+      <div>
+        <button
+          type="button"
+          className={link}
+          style={{ color: DUST }}
+          aria-expanded={settingsOpen}
+          onClick={() => setSettingsOpen((o) => !o)}
+        >
+          Settings & backup {settingsOpen ? '▴' : '▾'}
+        </button>
+      </div>
+      {settingsOpen && (
       <div className="flex flex-wrap items-center gap-x-6">
         <button type="button" className={link} style={{ color: DUST }} onClick={onToggleSound}>
           Sound · {soundEnabled ? 'On' : 'Off'}
@@ -237,6 +305,7 @@ export const Footer: React.FC<FooterProps> = ({
           Erase everything
         </button>
       </div>
+      )}
       <span className="font-mono text-[12px] tracking-[0.04em]" style={{ color: DUST }}>
         Saved privately in this browser. No account needed yet.
       </span>

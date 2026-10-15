@@ -14,6 +14,7 @@ import {
   chunkEnd,
   courseColorOf,
   dueDateOf,
+  fmtDuration,
   formatDateKey,
   fmtHHMM,
   fmtWhen,
@@ -69,6 +70,9 @@ export const WeekView: React.FC<Props> = ({
   onOpenHours,
 }) => {
   const [classFilter, setClassFilter] = useState<string | null>(null);
+  const [chartOpen, setChartOpen] = useState(false);
+  // Day plans start folded (today's starts open); a click on the day's "Study plan" line flips it.
+  const [planOpen, setPlanOpen] = useState<Record<string, boolean>>({});
 
   const courseMap = useMemo(() => new Map(courses.map((c) => [c.id, c])), [courses]);
   const assignmentMap = useMemo(() => new Map(assignments.map((a) => [a.id, a])), [assignments]);
@@ -180,7 +184,32 @@ export const WeekView: React.FC<Props> = ({
             </div>
 
             <div className="flex max-w-[760px] flex-col gap-[10px]">
-              <Label>Open work per class · {progressLabel}</Label>
+              <button
+                type="button"
+                onClick={() => setChartOpen((o) => !o)}
+                aria-expanded={chartOpen}
+                className="flex w-fit cursor-pointer items-center gap-3 border-none bg-transparent p-0 text-left"
+                style={{ color: DUST }}
+              >
+                <Label>Open work per class · {progressLabel}</Label>
+                <span className="font-mono text-[12px]" aria-hidden="true">
+                  {chartOpen ? '▴' : '▾'}
+                </span>
+              </button>
+              {!chartOpen && activeFilter && (
+                <span className="font-mono text-[12px]" style={{ color: DUST, letterSpacing: '0.04em' }}>
+                  Showing one class only
+                  {' · '}
+                  <button
+                    type="button"
+                    onClick={() => setClassFilter(null)}
+                    className="cursor-pointer border-none bg-transparent p-0 font-mono text-[12px] underline"
+                    style={{ color: PAPER }}
+                  >
+                    Show all classes
+                  </button>
+                </span>
+              )}
               {bars.length === 0 && (
                 <div className="flex flex-wrap items-center gap-4 py-2">
                   <span className="font-mono text-[13px]" style={{ color: DUST }}>
@@ -191,7 +220,7 @@ export const WeekView: React.FC<Props> = ({
                   </Btn>
                 </div>
               )}
-              {bars.map((b) => {
+              {chartOpen && bars.map((b) => {
                 const selected = activeFilter === b.courseId;
                 return (
                   <div key={b.courseId} className="flex min-h-8 items-center gap-[14px]">
@@ -231,6 +260,7 @@ export const WeekView: React.FC<Props> = ({
                   </div>
                 );
               })}
+              {chartOpen && (
               <span className="font-mono text-[12px]" style={{ color: DUST, letterSpacing: '0.04em' }}>
                 Filled = in progress · Outlined = to do · Done drops off the chart
                 {activeFilter && (
@@ -247,6 +277,7 @@ export const WeekView: React.FC<Props> = ({
                   </>
                 )}
               </span>
+              )}
             </div>
           </div>
 
@@ -342,6 +373,7 @@ export const WeekView: React.FC<Props> = ({
                 tone={NIGHT_TONE}
                 now={now}
                 whenMode="date"
+                showStatus={false}
                 onSetStatus={onSetStatus}
                 onOpen={onOpenAssignment}
               />
@@ -353,6 +385,42 @@ export const WeekView: React.FC<Props> = ({
       {days.map((d) => {
         const tone: Tone = d.isToday ? PAPER_TONE : NIGHT_TONE;
         const empty = d.assignments.length === 0 && d.chunks.length === 0;
+        if (empty) {
+          // Nothing planned or due: a single slim line instead of a full-height day block.
+          return (
+            <section
+              key={d.key}
+              aria-label={`${DAY_SHORT[d.date.getDay()]} ${d.date.getDate()}, nothing due`}
+              className="flex items-center gap-4"
+              style={{
+                boxSizing: 'border-box',
+                padding: d.isToday ? '16px 20px' : '14px 0',
+                margin: d.isToday ? '0 -20px' : '0',
+                background: d.isToday ? PAPER : 'transparent',
+                color: tone.ink,
+                borderTop: d.isToday ? 'none' : `1px solid ${RULE}`,
+                boxShadow: d.isToday ? `8px 8px 0 ${LILAC}` : 'none',
+              }}
+            >
+              <span className="flex w-[150px] flex-none items-baseline gap-3">
+                <span className="font-serif text-[40px] leading-none" style={{ letterSpacing: '-0.03em' }}>
+                  {d.date.getDate()}
+                </span>
+                <span className="font-mono text-[13px] uppercase" style={{ letterSpacing: '0.14em', color: tone.muted }}>
+                  {d.label}
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="h-px flex-[1_1_24px]"
+                style={{ borderBottom: '2px dotted currentColor', opacity: 0.3 }}
+              />
+              <span className="flex-none font-mono text-[13px]" style={{ color: tone.muted }}>
+                Nothing due
+              </span>
+            </section>
+          );
+        }
         return (
           <section
             key={d.key}
@@ -398,36 +466,48 @@ export const WeekView: React.FC<Props> = ({
                   courses={courseMap}
                   tone={tone}
                   now={now}
+                  showStatus={false}
                   onSetStatus={onSetStatus}
                   onOpen={onOpenAssignment}
                 />
               ))}
 
-              {d.chunks.length > 0 && (
-                <div className="mt-3 flex flex-col gap-1">
-                  <span
-                    className="pb-1 pt-2 font-mono text-[12px] uppercase"
-                    style={{ letterSpacing: '0.08em', color: tone.muted, borderTop: `1px dotted ${tone.muted}` }}
-                  >
-                    Study plan · {d.chunks.length} {d.chunks.length === 1 ? 'block' : 'blocks'}
-                  </span>
-                  {d.chunks.map((c) => (
-                    <BlockRow
-                      key={c.id}
-                      chunk={c}
-                      assignment={assignmentMap.get(c.assignmentId)}
-                      courses={courseMap}
-                      tone={tone}
-                      now={now}
-                      variant="week"
-                      onToggle={onToggleChunk}
-                      onFocus={onFocus}
-                      onShift={onShiftChunk}
-                      onResize={onResizeChunk}
-                    />
-                  ))}
-                </div>
-              )}
+              {d.chunks.length > 0 && (() => {
+                const planIsOpen = planOpen[d.key] ?? d.isToday;
+                const planMinutes = d.chunks.reduce((s, c) => s + c.durationMinutes, 0);
+                return (
+                  <div className="mt-3 flex flex-col gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setPlanOpen((p) => ({ ...p, [d.key]: !planIsOpen }))}
+                      aria-expanded={planIsOpen}
+                      className="flex w-full cursor-pointer items-center justify-between gap-3 bg-transparent pb-1 pt-2 text-left font-mono text-[12px] uppercase"
+                      style={{ letterSpacing: '0.08em', color: tone.muted, border: 'none', borderTop: `1px dotted ${tone.muted}` }}
+                    >
+                      <span>
+                        Study plan · {d.chunks.length} {d.chunks.length === 1 ? 'block' : 'blocks'} · {fmtDuration(planMinutes)}
+                      </span>
+                      <span aria-hidden="true">{planIsOpen ? '▴' : '▾'}</span>
+                    </button>
+                    {planIsOpen &&
+                      d.chunks.map((c) => (
+                        <BlockRow
+                          key={c.id}
+                          chunk={c}
+                          assignment={assignmentMap.get(c.assignmentId)}
+                          courses={courseMap}
+                          tone={tone}
+                          now={now}
+                          variant="week"
+                          onToggle={onToggleChunk}
+                          onFocus={onFocus}
+                          onShift={onShiftChunk}
+                          onResize={onResizeChunk}
+                        />
+                      ))}
+                  </div>
+                );
+              })()}
             </div>
           </section>
         );
